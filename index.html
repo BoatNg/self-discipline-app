@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- PWA Web App Manifest -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- 图标 -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- 应用信息 -->
+    <meta name="description" content="在冲动发生时提供最低成本、最有效的干预" />
+    <meta name="application-name" content="我不要" />
+    <meta name="apple-mobile-web-app-title" content="我不要" />
+
+    <!-- 主题颜色 -->
+    <meta name="theme-color" content="#4ade80" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1e293b" media="(prefers-color-scheme: dark)" />
+
+    <!-- iOS兼容性 -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Windows兼容性 -->
+    <meta name="msapplication-TileColor" content="#4ade80" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+
+    <!-- 安全策略 -->
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+
+    <title>我不要 - 冲动管理工具</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

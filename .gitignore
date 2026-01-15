@@ -1,0 +1,89 @@
+# ===================== 基础通用忽略 =====================
+# 依赖包目录（npm/yarn/pnpm）
+node_modules/
+# 锁文件（如需统一版本可取消注释，建议团队协作时保留）
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+# 编译/构建产物
+dist/
+build/
+out/
+# 临时文件
+tmp/
+temp/
+# 日志文件
+logs/
+*.log
+# 环境变量配置（含敏感信息）
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+# npm 错误日志
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ===================== 编辑器/IDE忽略 =====================
+# VSCode
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+# WebStorm/IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+# Vim
+*.swp
+*.swo
+# macOS系统文件
+.DS_Store
+.AppleDouble
+.LSOverride
+# Windows系统文件
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+# Linux系统文件
+*~
+.fuse_hidden*
+
+# ===================== 框架/工具专属忽略 =====================
+# Vue
+.vuepress/dist
+.nuxt/
+# React/Next.js
+.next/
+coverage/
+# TypeScript
+*.tsbuildinfo
+# Jest
+jest.config.js
+# ESLint/Prettier
+.eslintcache
+.prettiercache
+# Rollup/Webpack
+rollup.config.js
+webpack.config.js
+# 测试相关
+coverage/
+.nyc_output/
+# 打包压缩文件
+*.zip
+*.tar.gz
+*.rar
+
+# ===================== 自定义忽略（根据项目补充） =====================
+# 示例：如果项目有上传的静态资源目录
+# uploads/
+# 示例：如果有本地脚本
+# scripts/local/

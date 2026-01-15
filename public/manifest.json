@@ -1,0 +1,90 @@
+{
+  "name": "我不要 - 冲动管理工具",
+  "short_name": "我不要",
+  "description": "在冲动发生时提供最低成本、最有效的干预",
+  "lang": "zh-CN",
+  "dir": "ltr",
+
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4ade80",
+  "orientation": "portrait",
+  "scope": "/",
+
+  "categories": ["health", "productivity", "lifestyle"],
+
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-64x64.png",
+      "sizes": "64x64",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/maskable-icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+
+  "screenshots": [
+    {
+      "src": "/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "桌面端界面"
+    },
+    {
+      "src": "/screenshot-mobile.png",
+      "sizes": "375x812",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "移动端界面"
+    }
+  ],
+
+  "shortcuts": [
+    {
+      "name": "我现在有冲动",
+      "short_name": "冲动干预",
+      "description": "立即开始冲动干预流程",
+      "url": "/intervention",
+      "icons": [
+        {
+          "src": "/shortcut-icon.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "查看历史记录",
+      "short_name": "历史",
+      "description": "查看冲动干预历史",
+      "url": "/history"
+    }
+  ],
+
+  "prefer_related_applications": false
+}

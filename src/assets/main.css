@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-calm-50 text-calm-800;
+    font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      Roboto,
+      Oxygen,
+      Ubuntu,
+      Cantarell,
+      sans-serif;
+  }
+
+  #app {
+    @apply min-h-screen;
+  }
+
+  /* 交互热区优化 */
+  @media (max-height: 800px) {
+    .thumb-zone {
+      margin-top: auto;
+      padding-bottom: env(safe-area-inset-bottom, 20px);
+    }
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-500 text-white font-medium py-4 px-8 rounded-full 
+           hover:bg-primary-600 active:bg-primary-700 
+           transition-all duration-200 
+           disabled:opacity-50 disabled:cursor-not-allowed
+           focus:outline-none focus:ring-2 focus:ring-primary-300;
+  }
+
+  .btn-secondary {
+    @apply bg-calm-200 text-calm-700 font-medium py-3 px-6 rounded-full 
+           hover:bg-calm-300 active:bg-calm-400 
+           transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-calm-300;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-lg p-6;
+  }
+
+  .breathe-circle {
+    animation: breathe-scale 8s ease-in-out infinite;
+  }
+
+  @keyframes breathe-scale {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.6);
+    }
+  }
+}
