@@ -71,18 +71,10 @@
       </div>
     </div>
 
-    <!-- 应用信息 -->
-    <div class="card mb-6">
-      <h3 class="font-medium text-calm-800 mb-3">关于应用</h3>
-      <div class="text-calm-600 text-sm space-y-2">
-        <p>版本: 1.0.0</p>
-        <p>这是一个本地运行的PWA应用，所有数据都保存在您的设备上。</p>
-        <p class="text-xs text-calm-400 mt-4">「我不要」- 冲动管理工具</p>
-      </div>
-    </div>
+    
 
     <!-- 数据管理 -->
-    <div class="card">
+    <div class="card mb-6">
       <h3 class="font-medium text-calm-800 mb-3">数据管理</h3>
       <div class="space-y-3">
         <div class="flex justify-between items-center">
@@ -100,6 +92,16 @@
             清除所有数据
           </button>
         </div>
+      </div>
+    </div>
+
+    <!-- 应用信息 -->
+    <div class="card">
+      <h3 class="font-medium text-calm-800 mb-3">关于应用</h3>
+      <div class="text-calm-600 text-sm space-y-2">
+        <p>版本: 1.0.0</p>
+        <p>这是一个本地运行的PWA应用，所有数据都保存在您的设备上。</p>
+        <p class="text-xs text-calm-400 mt-4">「我不要」- 冲动管理工具</p>
       </div>
     </div>
 
@@ -149,6 +151,9 @@
       </div>
     </div>
   </div>
+  <br>
+  <br>
+  <br>
 </template>
 
 <script setup lang="ts">

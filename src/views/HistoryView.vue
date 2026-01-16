@@ -29,6 +29,10 @@
                     : ''
               }}
             </div>
+            <!-- 任务关联显示 -->
+            <div v-if="getTaskName(log.taskId)" class="text-xs text-calm-400 mt-1">
+              📌 {{ getTaskName(log.taskId) }}
+            </div>
           </div>
 
           <div class="flex items-center">
@@ -94,5 +98,18 @@ const getOutcomeText = (isCompleted: boolean, outcome: 'resisted' | 'relapsed' |
     default:
       return '未记录'
   }
+}
+
+const getTaskName = (taskId: string | undefined) => {
+  if (!taskId || taskId === '') {
+    return null
+  }
+
+  const task = store.tasks.find((t) => t.id === taskId)
+  if (!task) {
+    return '已删除的任务'
+  }
+
+  return task.name
 }
 </script>
