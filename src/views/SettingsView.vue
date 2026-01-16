@@ -14,33 +14,59 @@
       </div>
 
       <div v-else class="space-y-3">
-        <div
-          v-for="task in store.tasks"
-          :key="task.id"
-          class="card flex items-center justify-between"
-        >
-          <div class="flex items-center">
+        <div v-for="task in store.tasks" :key="task.id" class="card">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center">
+              <button
+                @click="store.toggleTask(task.id)"
+                class="mr-3 w-8 h-8 rounded-full border-2 flex items-center justify-center"
+                :class="{
+                  'border-primary-500 bg-primary-500': task.isEnabled,
+                  'border-calm-300': !task.isEnabled
+                }"
+              >
+                <span v-if="task.isEnabled" class="text-white">✓</span>
+              </button>
+              <span :class="{ 'text-calm-400 line-through': !task.isEnabled }">
+                {{ task.name }}
+              </span>
+            </div>
+
             <button
-              @click="store.toggleTask(task.id)"
-              class="mr-3 w-8 h-8 rounded-full border-2 flex items-center justify-center"
-              :class="{
-                'border-primary-500 bg-primary-500': task.isEnabled,
-                'border-calm-300': !task.isEnabled
-              }"
+              @click="store.deleteTask(task.id)"
+              class="text-calm-400 hover:text-red-500 transition-colors"
             >
-              <span v-if="task.isEnabled" class="text-white">✓</span>
+              ✕
             </button>
-            <span :class="{ 'text-calm-400 line-through': !task.isEnabled }">
-              {{ task.name }}
-            </span>
           </div>
 
-          <button
-            @click="store.deleteTask(task.id)"
-            class="text-calm-400 hover:text-red-500 transition-colors"
-          >
-            ✕
-          </button>
+          <!-- 统计信息 -->
+          <div v-if="store.getTaskStats(task.id)" class="pl-11">
+            <div class="text-xs text-calm-500 space-y-1">
+              <div class="flex justify-between">
+                <span>关联次数:</span>
+                <span class="font-medium">{{
+                  store.getTaskStats(task.id)?.associationCount || 0
+                }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span>成功率:</span>
+                <span class="font-medium"
+                  >{{ store.getTaskStats(task.id)?.successRate || 0 }}%</span
+                >
+              </div>
+              <div
+                v-if="store.getTaskStats(task.id)?.lastAssociatedAt"
+                class="flex justify-between"
+              >
+                <span>最近关联:</span>
+                <span class="font-medium">
+                  {{ formatDate(store.getTaskStats(task.id)!.lastAssociatedAt!) }}
+                </span>
+              </div>
+              <div v-else class="text-calm-400 italic">尚未关联过冲动记录</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -150,5 +176,23 @@ const confirmClearData = () => {
   store.tasks = []
   store.urgeLogs = []
   showConfirmClear.value = false
+}
+
+const formatDate = (timestamp: number) => {
+  const date = new Date(timestamp)
+  const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const yesterday = new Date(today)
+  yesterday.setDate(yesterday.getDate() - 1)
+
+  const dateTime = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+
+  if (dateTime.getTime() === today.getTime()) {
+    return '今天'
+  } else if (dateTime.getTime() === yesterday.getTime()) {
+    return '昨天'
+  } else {
+    return `${date.getMonth() + 1}/${date.getDate()}`
+  }
 }
 </script>

@@ -9,12 +9,23 @@ export interface UrgeLog {
   outcome: Outcome
   triggerReason?: string
   cognitiveTag?: string // 认知卸载时选择的标签
+  taskId?: string // 关联的任务ID
 }
 
 export interface Task {
   id: string
   name: string
   isEnabled: boolean
+}
+
+export interface TaskStats {
+  taskId: string
+  taskName: string
+  associationCount: number
+  resistedCount: number
+  relapsedCount: number
+  successRate: number
+  lastAssociatedAt?: number
 }
 
 export interface AppState {

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-center min-h-[400px]">
+  <div class="flex flex-col items-center justify-center min-h-[calc(100vh-160px)]">
     <div class="mb-8 text-center">
       <h2 class="text-2xl font-medium text-calm-800 mb-4">跟着呼吸</h2>
       <p class="text-calm-600">吸气时圆圈变大，呼气时圆圈变小</p>
@@ -34,13 +34,13 @@
     </div>
 
     <!-- 提示文字 -->
-    <div class="max-w-sm text-center text-calm-500">
+    <div class="mt-8 mb-4 max-w-sm text-center text-calm-500">
       <p class="mb-2">🌬️ 关注你的呼吸</p>
       <p class="text-sm">不需要控制，只需要观察呼吸的自然节奏</p>
     </div>
 
     <!-- 跳过按钮 -->
-    <button @click="nextStep" class="mt-8 btn-secondary">跳过呼吸练习</button>
+    <button @click="nextStep" class="intervention-skip-btn">跳过呼吸练习</button>
   </div>
 </template>
 

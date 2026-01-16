@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-center min-h-[400px]">
+  <div class="flex flex-col items-center justify-center min-h-[calc(100vh-160px)]">
     <div class="mb-8 text-center">
       <h2 class="text-2xl font-medium text-calm-800 mb-4">我们一起等 3 分钟</h2>
       <p class="text-calm-600">什么都不用做，看着时间过去就好</p>
@@ -32,10 +32,13 @@
     </div>
 
     <!-- 提示文字 -->
-    <div class="max-w-sm text-center text-calm-500">
+    <div class="mt-8 mb-4 max-w-sm text-center text-calm-500">
       <p class="mb-2">💭 冲动会像海浪一样过去</p>
       <p class="text-sm">不需要对抗它，只需要观察它的存在</p>
     </div>
+
+    <!-- 跳过按钮 -->
+    <button @click="skipTimer" class="intervention-skip-btn">跳过等待</button>
   </div>
 </template>
 
@@ -99,6 +102,17 @@ const handleVisibilityChange = () => {
     // 页面重新可见时，更新已过去的时间
     updateElapsedTime()
   }
+}
+
+// 跳过等待
+const skipTimer = () => {
+  if (timer.value) {
+    clearInterval(timer.value)
+  }
+
+  // 标记干预完成并跳转到结果页面
+  store.markInterventionCompleted()
+  router.push('/result')
 }
 
 onMounted(() => {

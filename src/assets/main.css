@@ -50,6 +50,18 @@
     @apply bg-white rounded-2xl shadow-lg p-6;
   }
 
+  .intervention-skip-btn {
+    @apply text-calm-500 hover:text-calm-700 
+           transition-all duration-200
+           font-medium py-2.5 px-5
+           border border-calm-300 hover:border-calm-400
+           rounded-full
+           bg-white/80 hover:bg-white
+           shadow-sm hover:shadow
+           focus:outline-none focus:ring-2 focus:ring-calm-300
+           active:scale-95;
+  }
+
   .breathe-circle {
     animation: breathe-scale 8s ease-in-out infinite;
   }

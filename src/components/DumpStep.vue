@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center min-h-[calc(100vh-120px)]">
+  <div class="flex flex-col items-center justify-center min-h-[calc(100vh-160px)]">
     <!-- 页面标题 -->
     <div class="mb-8 text-center">
       <h2 class="text-2xl font-medium text-calm-800 mb-4">这一刻，最接近的是哪种感觉？</h2>
@@ -34,16 +34,14 @@
       </button>
     </div>
 
-    <!-- 跳过按钮 -->
-    <button @click="skipSelection" class="mt-4 text-calm-500 hover:text-calm-700 transition-colors">
-      跳过
-    </button>
-
     <!-- 提示文字 -->
-    <div class="mt-8 max-w-sm text-center text-calm-500">
+    <div class="mt-8 mb-4 max-w-sm text-center text-calm-500">
       <p class="mb-2">🧠 认知卸载</p>
       <p class="text-sm">选择最接近的感受，不需要思考清楚</p>
     </div>
+
+    <!-- 跳过按钮 -->
+    <!-- <button @click="skipSelection" class="intervention-skip-btn">跳过</button> -->
   </div>
 </template>
 
@@ -78,19 +76,9 @@ const selectOption = (optionId: string) => {
   router.push('/result')
 }
 
-const skipSelection = () => {
-  // 跳过时不标记为完成，直接返回首页
-  store.cancelIntervention()
-  router.push('/')
-}
+// const skipSelection = () => {
+//   // 跳过时不标记为完成，直接返回首页
+//   store.cancelIntervention()
+//   router.push('/')
+// }
 </script>
-
-<style scoped>
-button {
-  transition: all 0.2s ease;
-}
-
-button:active {
-  transform: scale(0.98);
-}
-</style>
