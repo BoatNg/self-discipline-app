@@ -1,0 +1,8 @@
+18:58:59 [vite] Internal server error: Element is missing end tag.
+  Plugin: vite:vue
+  File: D:/code/self-discipline-app/src/views/SettingsView.vue:17:7
+  15 |  
+  16 |        <!-- "我不要"任务 -->
+  17 |        <div v-if="dontWantTasks.length > 0" class="mb-6">
+     |         ^
+19:22:58 [vite] hmr update /src/views/ResultView.vue, /src/assets/main.css

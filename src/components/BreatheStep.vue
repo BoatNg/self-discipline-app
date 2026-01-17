@@ -39,22 +39,31 @@
       <p class="text-sm">不需要控制，只需要观察呼吸的自然节奏</p>
     </div>
 
-    <!-- 跳过按钮 -->
-    <button @click="nextStep" class="intervention-skip-btn">跳过呼吸练习</button>
+    <!-- 跳过按钮（呼吸练习结束前显示） -->
+    <button v-if="!isCompleted" @click="skipBreathing" class="intervention-skip-btn">
+      跳过呼吸练习
+    </button>
+
+    <!-- 完成按钮（呼吸练习结束后显示） -->
+    <button v-if="isCompleted" @click="goToResult" class="btn-primary w-full max-w-md">完成</button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUrgeStore } from '@/stores/useUrgeStore'
 
 const router = useRouter()
 const store = useUrgeStore()
 
+// 从父组件注入的方法
+const getRouteParams = inject<() => any>('getRouteParams')
+
 const breathePhase = ref('吸气')
 const breatheTimer = ref<ReturnType<typeof setTimeout> | null>(null)
 const phaseTimer = ref<ReturnType<typeof setTimeout> | null>(null)
+const isCompleted = ref(false)
 
 const startBreathing = () => {
   // 8秒一个完整呼吸周期
@@ -83,22 +92,37 @@ const startBreathing = () => {
     if (phaseTimer.value) {
       clearTimeout(phaseTimer.value)
     }
-    // 标记干预完成并跳转到结果页面
+    // 标记干预完成
     store.markInterventionCompleted()
-    router.push('/result')
+    isCompleted.value = true
   }, 60000)
 }
 
-const nextStep = () => {
+// 跳转到结果页面
+const goToResult = () => {
+  // 获取路由参数
+  const routeParams = getRouteParams ? getRouteParams() : {}
+  const taskIdFromRoute = routeParams.taskIdFromRoute
+  const urgeLogId = routeParams.urgeLogId
+
+  // 跳转到结果页面，传递任务ID和干预ID
+  const query: Record<string, string> = {}
+  if (taskIdFromRoute) query.taskId = taskIdFromRoute
+  if (urgeLogId) query.urgeId = urgeLogId
+
+  router.push({ path: '/result', query })
+}
+
+const skipBreathing = () => {
   if (breatheTimer.value) {
     clearTimeout(breatheTimer.value)
   }
   if (phaseTimer.value) {
     clearTimeout(phaseTimer.value)
   }
-  // 标记干预完成并跳转到结果页面
+  // 标记干预完成
   store.markInterventionCompleted()
-  router.push('/result')
+  isCompleted.value = true
 }
 
 onMounted(() => {

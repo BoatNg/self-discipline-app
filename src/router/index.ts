@@ -35,6 +35,18 @@ const router = createRouter({
       meta: { title: '设置' }
     },
     {
+      path: '/checkin/:taskId',
+      name: 'checkin',
+      component: () => import('@/views/CheckInView.vue'),
+      meta: { title: '每日打卡' }
+    },
+    {
+      path: '/task/create',
+      name: 'task-create',
+      component: () => import('@/views/TaskCreateView.vue'),
+      meta: { title: '创建任务' }
+    },
+    {
       path: '/:pathMatch(.*)*',
       redirect: '/'
     }

@@ -40,18 +40,26 @@
       <p class="text-sm">选择最接近的感受，不需要思考清楚</p>
     </div>
 
+    <!-- 完成按钮（选择选项后显示） -->
+    <button v-if="selectedOption" @click="goToResult" class="btn-primary w-full max-w-md">
+      完成
+    </button>
+
     <!-- 跳过按钮 -->
     <!-- <button @click="skipSelection" class="intervention-skip-btn">跳过</button> -->
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUrgeStore } from '@/stores/useUrgeStore'
 
 const router = useRouter()
 const store = useUrgeStore()
+
+// 从父组件注入的方法
+const getRouteParams = inject<() => any>('getRouteParams')
 const selectedOption = ref<string | null>(null)
 
 const options = [
@@ -65,15 +73,26 @@ const options = [
 const selectOption = (optionId: string) => {
   selectedOption.value = optionId
 
-  // 立即完成干预并记录选择
+  // 完成干预并记录选择
   store.markInterventionCompleted()
 
   // 记录认知标签
   const optionText = options.find((opt) => opt.id === optionId)?.text || optionId
   store.setCognitiveTag(optionText)
+}
 
-  // 跳转到结果页面
-  router.push('/result')
+// 跳转到结果页面
+const goToResult = () => {
+  // 从父组件获取路由参数
+  const routeParams = getRouteParams ? getRouteParams() : {}
+  const taskIdFromRoute = routeParams.taskIdFromRoute
+  const urgeLogId = routeParams.urgeLogId
+
+  const query: Record<string, string> = {}
+  if (taskIdFromRoute) query.taskId = taskIdFromRoute
+  if (urgeLogId) query.urgeId = urgeLogId
+
+  router.push({ path: '/result', query })
 }
 
 // const skipSelection = () => {

@@ -1,11 +1,34 @@
 <template>
   <div>
-    <div class="mb-6">
-      <h2 class="text-xl font-semibold text-calm-800 mb-4">冲动记录</h2>
+    <!-- 选项卡 -->
+    <div class="flex border-b border-calm-200 mb-6">
+      <button
+        @click="activeTab = 'urge'"
+        :class="{
+          'text-calm-800 border-b-2 border-calm-800': activeTab === 'urge',
+          'text-calm-500 hover:text-calm-700': activeTab !== 'urge'
+        }"
+        class="flex-1 py-3 text-center font-medium transition-colors"
+      >
+        🚫 冲动记录
+      </button>
+      <button
+        @click="activeTab = 'checkin'"
+        :class="{
+          'text-calm-800 border-b-2 border-calm-800': activeTab === 'checkin',
+          'text-calm-500 hover:text-calm-700': activeTab !== 'checkin'
+        }"
+        class="flex-1 py-3 text-center font-medium transition-colors"
+      >
+        💪 打卡记录
+      </button>
+    </div>
 
+    <!-- 冲动记录 -->
+    <div v-if="activeTab === 'urge'">
       <div v-if="store.urgeLogs.length === 0" class="text-center py-12">
         <div class="text-6xl mb-4">📝</div>
-        <p class="text-calm-500">还没有记录</p>
+        <p class="text-calm-500">还没有冲动记录</p>
         <p class="text-calm-400 text-sm mt-2">点击首页按钮开始第一次干预</p>
       </div>
 
@@ -51,14 +74,57 @@
         </div>
       </div>
     </div>
+
+    <!-- 打卡记录 -->
+    <div v-if="activeTab === 'checkin'">
+      <div v-if="store.checkInRecords.length === 0" class="text-center py-12">
+        <div class="text-6xl mb-4">📅</div>
+        <p class="text-calm-500">还没有打卡记录</p>
+        <p class="text-calm-400 text-sm mt-2">创建"我想要"任务并开始打卡</p>
+      </div>
+
+      <div v-else class="space-y-3">
+        <div
+          v-for="record in sortedCheckInRecords"
+          :key="record.id"
+          class="card flex items-center justify-between"
+        >
+          <div>
+            <div class="font-medium text-calm-800">
+              {{ formatDate(record.timestamp) }}
+            </div>
+            <div class="text-sm text-calm-500 mt-1">
+              {{ getTaskName(record.taskId) }}
+            </div>
+            <div class="text-xs text-calm-400 mt-1">
+              {{ getCheckInStatusText(record.isCompleted) }}
+            </div>
+          </div>
+
+          <div class="flex items-center">
+            <div
+              :class="{
+                'bg-green-100 text-green-800': record.isCompleted,
+                'bg-red-100 text-red-800': !record.isCompleted
+              }"
+              class="px-3 py-1 rounded-full text-sm font-medium"
+            >
+              {{ record.isCompleted ? '成功' : '失败' }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 import { useUrgeStore } from '@/stores/useUrgeStore'
 import type { InterventionType } from '@/types'
 
 const store = useUrgeStore()
+const activeTab = ref<'urge' | 'checkin'>('urge')
 
 const formatDate = (timestamp: number) => {
   const date = new Date(timestamp)
@@ -112,4 +178,13 @@ const getTaskName = (taskId: string | undefined) => {
 
   return task.name
 }
+
+const getCheckInStatusText = (isCompleted: boolean) => {
+  return isCompleted ? '打卡成功' : '打卡失败'
+}
+
+// 按时间倒序排列打卡记录
+const sortedCheckInRecords = computed(() => {
+  return [...store.checkInRecords].sort((a, b) => b.timestamp - a.timestamp)
+})
 </script>

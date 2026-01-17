@@ -6,7 +6,7 @@
       </div>
     </header>
 
-    <main class="container mx-auto px-4 py-6">
+    <main class="container mx-auto px-4 py-6" :class="{ 'pb-20': showNavigation }">
       <router-view />
     </main>
 

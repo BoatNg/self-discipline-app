@@ -37,23 +37,30 @@
       <p class="text-sm">不需要对抗它，只需要观察它的存在</p>
     </div>
 
-    <!-- 跳过按钮 -->
-    <button @click="skipTimer" class="intervention-skip-btn">跳过等待</button>
+    <!-- 跳过按钮（倒计时结束前显示） -->
+    <button v-if="!isCompleted" @click="skipTimer" class="intervention-skip-btn">跳过等待</button>
+
+    <!-- 完成按钮（倒计时结束后显示） -->
+    <button v-if="isCompleted" @click="goToResult" class="btn-primary w-full max-w-md">完成</button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUrgeStore } from '@/stores/useUrgeStore'
 
 const router = useRouter()
 const store = useUrgeStore()
 
+// 从父组件注入的方法
+const getRouteParams = inject<() => any>('getRouteParams')
+
 const totalTime = 3 * 60 // 3分钟
 const startTime = ref(Date.now())
 const elapsedTime = ref(0)
 const timer = ref<ReturnType<typeof setInterval> | null>(null)
+const isCompleted = ref(false)
 
 const timeLeft = computed(() => {
   return Math.max(0, totalTime - elapsedTime.value)
@@ -89,9 +96,9 @@ const startTimer = () => {
         navigator.vibrate(200)
       }
 
-      // 标记干预完成并跳转到结果页面
+      // 标记干预完成
       store.markInterventionCompleted()
-      router.push('/result')
+      isCompleted.value = true
     }
   }, 100)
 }
@@ -104,15 +111,30 @@ const handleVisibilityChange = () => {
   }
 }
 
+// 跳转到结果页面
+const goToResult = () => {
+  // 获取路由参数
+  const routeParams = getRouteParams ? getRouteParams() : {}
+  const taskIdFromRoute = routeParams.taskIdFromRoute
+  const urgeLogId = routeParams.urgeLogId
+
+  // 跳转到结果页面，传递任务ID和干预ID
+  const query: Record<string, string> = {}
+  if (taskIdFromRoute) query.taskId = taskIdFromRoute
+  if (urgeLogId) query.urgeId = urgeLogId
+
+  router.push({ path: '/result', query })
+}
+
 // 跳过等待
 const skipTimer = () => {
   if (timer.value) {
     clearInterval(timer.value)
   }
 
-  // 标记干预完成并跳转到结果页面
+  // 标记干预完成
   store.markInterventionCompleted()
-  router.push('/result')
+  isCompleted.value = true
 }
 
 onMounted(() => {

@@ -42,62 +42,48 @@
       <p class="text-sm">使用工具本身就是进步，结果只是记录</p>
     </div>
 
-    <!-- 任务关联入口（只在选择结果后显示） -->
-    <div v-if="selectedOutcome && store.isInIntervention" class="w-full max-w-md mb-8">
-      <!-- 有任务的情况 -->
-      <div
-        v-if="store.tasks.length > 0"
-        class="flex items-center justify-between p-4 bg-calm-50 rounded-xl"
-      >
-        <div class="flex items-center">
-          <span v-if="!selectedTaskId" class="text-calm-600">关联一个任务（可选）</span>
-          <div v-else class="flex items-center">
-            <div
-              class="w-6 h-6 rounded-full border-2 border-primary-500 bg-primary-500 mr-2 flex items-center justify-center"
-            >
-              <span class="text-white text-xs">✓</span>
+    <!-- 任务关联入口 -->
+    <div v-if="store.isInIntervention" class="w-full max-w-md mb-8">
+      <!-- 任务关联选择 -->
+      <div class="text-center p-4 bg-calm-50 rounded-xl">
+        <p class="text-calm-600 mb-3">这次冲动和哪个任务相关？（可选）</p>
+
+        <!-- 如果已经有选择的任务，显示当前选择 -->
+        <div
+          v-if="selectedTaskId"
+          class="mb-4 p-3 bg-primary-50 rounded-lg border border-primary-200"
+        >
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div
+                class="w-5 h-5 rounded-full bg-primary-500 mr-2 flex items-center justify-center"
+              >
+                <span class="text-white text-xs">✓</span>
+              </div>
+              <span class="text-primary-600 font-medium">{{ getSelectedTaskName() }}</span>
             </div>
-            <span class="text-primary-600 font-medium">{{ getSelectedTaskName() }}</span>
+            <button @click="clearTaskSelection" class="text-calm-500 hover:text-calm-700 text-sm">
+              取消
+            </button>
           </div>
         </div>
+
+        <!-- 选择任务按钮 -->
         <button
           @click="showTaskSelection = true"
-          class="text-primary-600 hover:text-primary-700 font-medium"
+          class="btn-secondary w-full text-primary-600 border-primary-200 hover:bg-primary-50"
         >
-          {{ selectedTaskId ? '更改' : '选择' }}
+          {{ selectedTaskId ? '重新选择' : '选择「我不要」任务' }}
         </button>
-      </div>
 
-      <!-- 没有任务的情况 -->
-      <div v-else class="text-center p-4 bg-calm-50 rounded-xl">
-        <div v-if="!selectedTaskId">
-          <p class="text-calm-600 mb-3">这种冲动如果以后还会出现，可以给它起个名字</p>
-          <div class="flex space-x-3">
-            <button
-              @click="showAddTask = true"
-              class="btn-secondary flex-1 text-primary-600 border-primary-200 hover:bg-primary-50"
-            >
-              添加一个「我不要」任务
-            </button>
-            <button
-              @click="skipTaskAssociation"
-              class="btn-secondary flex-1 text-calm-500 border-calm-200 hover:bg-calm-50"
-            >
-              先不用
-            </button>
-          </div>
-        </div>
-        <div v-else class="flex items-center justify-between">
-          <div class="flex items-center">
-            <div
-              class="w-6 h-6 rounded-full border-2 border-primary-500 bg-primary-500 mr-2 flex items-center justify-center"
-            >
-              <span class="text-white text-xs">✓</span>
-            </div>
-            <span class="text-primary-600 font-medium">{{ getSelectedTaskName() }}</span>
-          </div>
-          <button @click="clearTaskSelection" class="text-calm-500 hover:text-calm-700 text-sm">
-            取消关联
+        <!-- 如果没有"我不要"任务，显示添加任务按钮 -->
+        <div v-if="store.tasks.filter((t) => t.type === 'DONT_WANT').length === 0" class="mt-3">
+          <p class="text-calm-500 text-sm mb-2">还没有「我不要」类型的任务</p>
+          <button
+            @click="showAddTask = true"
+            class="btn-secondary w-full text-green-600 border-green-200 hover:bg-green-50"
+          >
+            添加新任务
           </button>
         </div>
       </div>
@@ -112,11 +98,6 @@
       完成记录
     </button>
 
-    <!-- 跳过按钮 -->
-    <button @click="skipResult" class="mt-4 text-calm-500 hover:text-calm-700 transition-colors">
-      跳过，不记录结果
-    </button>
-
     <!-- 任务选择底部弹窗 -->
     <div
       v-if="showTaskSelection"
@@ -127,10 +108,10 @@
         <div class="p-6">
           <h3 class="text-lg font-medium text-calm-800 mb-4">这次冲动，更像是下面哪个？</h3>
 
-          <!-- 任务列表 -->
+          <!-- 任务列表（只显示"我不要"任务） -->
           <div class="space-y-3 mb-6">
             <button
-              v-for="task in store.recentTasks"
+              v-for="task in store.tasks.filter((t) => t.type === 'DONT_WANT')"
               :key="task.id"
               @click="selectTask(task.id)"
               class="w-full p-4 text-left rounded-xl border-2 transition-all duration-200"
@@ -199,18 +180,35 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useUrgeStore } from '@/stores/useUrgeStore'
 import type { Outcome } from '@/types'
 
 const router = useRouter()
+const route = useRoute()
 const store = useUrgeStore()
 const selectedOutcome = ref<Outcome>(null)
 const selectedTaskId = ref<string | undefined>(undefined)
 const showTaskSelection = ref(false)
 const showAddTask = ref(false)
 const newTaskName = ref('')
+
+// 从路由查询参数中获取任务ID和干预ID
+onMounted(() => {
+  const taskIdFromRoute = route.query.taskId as string
+  const urgeIdFromRoute = route.query.urgeId as string
+
+  console.log('结果页面接收到的参数:', { taskIdFromRoute, urgeIdFromRoute })
+
+  // 如果有从路由传递的任务ID，且任务存在且是"我不要"类型，设置为默认选择
+  if (taskIdFromRoute) {
+    const task = store.tasks.find((t) => t.id === taskIdFromRoute && t.type === 'DONT_WANT')
+    if (task) {
+      selectedTaskId.value = taskIdFromRoute
+    }
+  }
+})
 
 const selectOutcome = (outcome: 'resisted' | 'relapsed') => {
   selectedOutcome.value = outcome
@@ -224,10 +222,6 @@ const selectTask = (taskId: string) => {
 const clearTaskSelection = () => {
   selectedTaskId.value = undefined
   showTaskSelection.value = false
-}
-
-const skipTaskAssociation = () => {
-  // 用户选择"先不用"，不做任何操作
 }
 
 const addTaskFromResult = () => {
@@ -251,11 +245,5 @@ const completeIntervention = () => {
     store.completeIntervention(selectedOutcome.value, selectedTaskId.value)
     router.push('/')
   }
-}
-
-const skipResult = () => {
-  // 标记为未记录结果，直接返回首页
-  store.completeIntervention(null)
-  router.push('/')
 }
 </script>
