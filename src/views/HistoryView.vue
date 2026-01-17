@@ -142,7 +142,9 @@ const formatDate = (timestamp: number) => {
   }
 }
 
-const getInterventionText = (type: InterventionType) => {
+const getInterventionText = (type: InterventionType | null) => {
+  if (!type) return '未选择'
+
   const interventionMap: Record<InterventionType, string> = {
     TIMER: '⏰ 3分钟等待',
     BREATHE: '🌬️ 呼吸练习',

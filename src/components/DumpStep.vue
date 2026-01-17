@@ -11,23 +11,23 @@
       <button
         v-for="option in options"
         :key="option.id"
-        @click="selectOption(option.id)"
+        @click="toggleOption(option.id)"
         class="w-full p-5 rounded-xl border-2 text-left transition-all duration-200"
         :class="{
-          'border-primary-500 bg-primary-50 text-primary-800': selectedOption === option.id,
+          'border-primary-500 bg-primary-50 text-primary-800': selectedOptions.includes(option.id),
           'border-calm-200 bg-white text-calm-800 hover:border-calm-300 hover:bg-calm-50':
-            selectedOption !== option.id
+            !selectedOptions.includes(option.id)
         }"
       >
         <div class="flex items-center">
           <div
             class="mr-4 w-8 h-8 rounded-full border-2 flex items-center justify-center"
             :class="{
-              'border-primary-500 bg-primary-500 text-white': selectedOption === option.id,
-              'border-calm-300': selectedOption !== option.id
+              'border-primary-500 bg-primary-500 text-white': selectedOptions.includes(option.id),
+              'border-calm-300': !selectedOptions.includes(option.id)
             }"
           >
-            <span v-if="selectedOption === option.id">✓</span>
+            <span v-if="selectedOptions.includes(option.id)">✓</span>
           </div>
           <div class="text-lg font-medium">{{ option.text }}</div>
         </div>
@@ -37,11 +37,15 @@
     <!-- 提示文字 -->
     <div class="mt-8 mb-4 max-w-sm text-center text-calm-500">
       <p class="mb-2">🧠 认知卸载</p>
-      <p class="text-sm">选择最接近的感受，不需要思考清楚</p>
+      <p class="text-sm">可以选择多个描述你此刻的感受</p>
     </div>
 
     <!-- 完成按钮（选择选项后显示） -->
-    <button v-if="selectedOption" @click="goToResult" class="btn-primary w-full max-w-md">
+    <button
+      v-if="selectedOptions.length > 0"
+      @click="goToResult"
+      class="btn-primary w-full max-w-md"
+    >
       完成
     </button>
 
@@ -60,7 +64,7 @@ const store = useUrgeStore()
 
 // 从父组件注入的方法
 const getRouteParams = inject<() => any>('getRouteParams')
-const selectedOption = ref<string | null>(null)
+const selectedOptions = ref<string[]>([])
 
 const options = [
   { id: 'annoyed', text: '有点烦 / 有点撑不住' },
@@ -70,15 +74,22 @@ const options = [
   { id: 'unknown', text: '说不清楚' }
 ]
 
-const selectOption = (optionId: string) => {
-  selectedOption.value = optionId
+const toggleOption = (optionId: string) => {
+  const index = selectedOptions.value.indexOf(optionId)
+  if (index === -1) {
+    selectedOptions.value.push(optionId)
+  } else {
+    selectedOptions.value.splice(index, 1)
+  }
 
   // 完成干预并记录选择
   store.markInterventionCompleted()
 
-  // 记录认知标签
-  const optionText = options.find((opt) => opt.id === optionId)?.text || optionId
-  store.setCognitiveTag(optionText)
+  // 记录多个认知标签
+  const selectedTexts = selectedOptions.value
+    .map((id) => options.find((opt) => opt.id === id)?.text || id)
+    .filter(Boolean)
+  store.setCognitiveTag(selectedTexts.join(', '))
 }
 
 // 跳转到结果页面

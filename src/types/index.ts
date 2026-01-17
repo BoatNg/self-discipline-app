@@ -13,7 +13,7 @@ export type TaskStatus = 'ACTIVE' | 'EXPIRED' | 'COMPLETED' | 'FAILED'
 export interface UrgeLog {
   id: string
   timestamp: number
-  assignedIntervention: InterventionType
+  assignedIntervention: InterventionType | null
   isCompleted: boolean
   outcome: Outcome
   triggerReason?: string

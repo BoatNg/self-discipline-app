@@ -122,7 +122,8 @@ const skipBreathing = () => {
   }
   // 标记干预完成
   store.markInterventionCompleted()
-  isCompleted.value = true
+  // 直接跳转到结果页
+  goToResult()
 }
 
 onMounted(() => {

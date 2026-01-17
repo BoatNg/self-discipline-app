@@ -292,7 +292,7 @@ export const useUrgeStore = defineStore(
       const todayDoWantTasks = tasks.value.filter(
         (task) => task.type === 'DO_WANT' && task.isEnabled && isTaskActive(task)
       )
-      if (todayDoWantTasks.length === 0) return 100 // 没有今天需要打卡的"我想要"任务时显示100%
+      if (todayDoWantTasks.length === 0) return 0 // 没有今天需要打卡的"我想要"任务时显示0%
 
       let completedToday = 0
 
@@ -343,7 +343,7 @@ export const useUrgeStore = defineStore(
       }
     }
 
-    const startIntervention = (interventionType: InterventionType, urgeId?: string) => {
+    const startIntervention = (interventionType: InterventionType | null, urgeId?: string) => {
       isInIntervention.value = true
       currentInterventionType.value = interventionType
       currentInterventionStartTime.value = Date.now()

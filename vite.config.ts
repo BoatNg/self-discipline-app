@@ -3,6 +3,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 import { VueMcp } from 'vite-plugin-vue-mcp'
+// import vueDevTools from 'vite-plugin-vue-devtools'
 
 export default defineConfig({
   server: {
@@ -138,6 +139,7 @@ export default defineConfig({
         ]
       }
     }),
+    // vueDevTools(),
     VueMcp()
   ],
   resolve: {

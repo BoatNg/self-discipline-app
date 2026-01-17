@@ -68,8 +68,9 @@
           </div>
         </div>
 
-        <!-- 选择任务按钮 -->
+        <!-- 选择任务按钮（只有在没有自动匹配时才显示） -->
         <button
+          v-if="!hasAutoMatchedTask"
           @click="showTaskSelection = true"
           class="btn-secondary w-full text-primary-600 border-primary-200 hover:bg-primary-50"
         >
@@ -190,6 +191,7 @@ const route = useRoute()
 const store = useUrgeStore()
 const selectedOutcome = ref<Outcome>(null)
 const selectedTaskId = ref<string | undefined>(undefined)
+const hasAutoMatchedTask = ref(false)
 const showTaskSelection = ref(false)
 const showAddTask = ref(false)
 const newTaskName = ref('')
@@ -201,11 +203,12 @@ onMounted(() => {
 
   console.log('结果页面接收到的参数:', { taskIdFromRoute, urgeIdFromRoute })
 
-  // 如果有从路由传递的任务ID，且任务存在且是"我不要"类型，设置为默认选择
+  // 如果有从路由传递的任务ID，且任务存在且是"我不要"类型，设置为自动匹配
   if (taskIdFromRoute) {
     const task = store.tasks.find((t) => t.id === taskIdFromRoute && t.type === 'DONT_WANT')
     if (task) {
       selectedTaskId.value = taskIdFromRoute
+      hasAutoMatchedTask.value = true
     }
   }
 })
