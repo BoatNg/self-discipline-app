@@ -1,0 +1,11 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": ["DEBUGGING.md", "AGENTS.md"],
+  "mcp": {
+    "vue-dev-mcp": {
+      "type": "remote",
+      "url": "http://localhost:3000/__mcp/sse",
+      "enabled": true
+    }
+  }
+}

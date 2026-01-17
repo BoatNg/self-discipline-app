@@ -2,8 +2,14 @@ import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
+import { VueMcp } from 'vite-plugin-vue-mcp'
 
 export default defineConfig({
+  server: {
+    port: 13348,        // 指定端口
+    strictPort: true,  // 如果端口被占用，直接报错（不自动换端口）
+    host: 'localhost', // 可选，默认是 localhost
+  },
   plugins: [
     vue(),
     VitePWA({
@@ -131,7 +137,8 @@ export default defineConfig({
           }
         ]
       }
-    })
+    }),
+    VueMcp()
   ],
   resolve: {
     alias: {
