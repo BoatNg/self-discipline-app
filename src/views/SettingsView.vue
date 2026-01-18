@@ -47,6 +47,10 @@
             <div v-if="store.getTaskStats(task.id)" class="pl-11">
               <div class="text-xs text-calm-500 space-y-1">
                 <div class="flex justify-between">
+                  <span>任务周期:</span>
+                  <span class="font-medium">{{ formatTaskPeriod(task) }}</span>
+                </div>
+                <div class="flex justify-between">
                   <span>关联次数:</span>
                   <span class="font-medium">{{
                     store.getTaskStats(task.id)?.associationCount || 0
@@ -221,7 +225,12 @@ const formatTaskPeriod = (task: Task) => {
   const endDate = new Date(task.endDate)
   const totalDays = Math.ceil((task.endDate - task.startDate) / (24 * 60 * 60 * 1000))
 
-  return `${startDate.getMonth() + 1}/${startDate.getDate()} - ${endDate.getMonth() + 1}/${endDate.getDate()} (${totalDays}天)`
+  // 根据任务类型显示不同的前缀
+  if (task.type === 'DONT_WANT') {
+    return `${startDate.getMonth() + 1}/${startDate.getDate()} - ${endDate.getMonth() + 1}/${endDate.getDate()} (${totalDays}天)`
+  } else {
+    return `${startDate.getMonth() + 1}/${startDate.getDate()} - ${endDate.getMonth() + 1}/${endDate.getDate()} (${totalDays}天)`
+  }
 }
 
 const formatDate = (timestamp: number) => {

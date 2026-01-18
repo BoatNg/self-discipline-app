@@ -55,11 +55,10 @@
         @click="$emit('date-click', day.date)"
         :class="[
           getDateCellClass(day),
-          getDateCellHeightClass(day),
           day.isToday ? 'ring-2 ring-calm-500 ring-offset-1' : '',
           day.isCurrentMonth ? 'cursor-pointer hover:shadow-sm transition-shadow' : 'cursor-default'
         ]"
-        class="rounded-lg p-2 flex flex-col"
+        class="rounded-lg p-2 flex flex-col h-36 overflow-hidden"
       >
         <!-- 日期数字 -->
         <div class="flex justify-between items-start mb-1">
@@ -83,14 +82,14 @@
         <!-- 任务状态列表（移动端优化） -->
         <div
           v-if="day.isCurrentMonth && day.taskStatusDetails.length > 0"
-          class="flex-1 overflow-y-auto"
+          class="flex-1 overflow-y-auto max-h-24"
         >
-          <div class="space-y-1 truncate">
+          <div class="space-y-1">
             <div
               v-for="taskDetail in day.taskStatusDetails"
               :key="taskDetail.taskId"
               :class="getTaskStatusColorClass(taskDetail.status)"
-              class="task-name"
+              class="task-name whitespace-normal break-words"
               :title="`${taskDetail.taskName}: ${getStatusText(taskDetail.status)}`"
             >
               {{ taskDetail.taskName }}
@@ -179,16 +178,6 @@ const getDateCellClass = (day: any) => {
   return 'border border-gray-200 bg-white'
 }
 
-// 获取日期单元格高度类（根据任务数量动态调整）
-const getDateCellHeightClass = (day: any) => {
-  const taskCount = day.taskStatusDetails.length
-
-  if (taskCount === 0) return 'h-24'
-  if (taskCount <= 3) return 'h-32'
-  if (taskCount <= 6) return 'h-40'
-  return 'h-48'
-}
-
 // 获取状态文本
 const getStatusText = (status: MonthViewTaskStatus) => {
   switch (status) {
@@ -209,10 +198,10 @@ const getStatusText = (status: MonthViewTaskStatus) => {
   @apply select-none;
 }
 
-/* 任务名称8px字体（全局） */
+/* 任务名称7px字体（全局） */
 .task-name {
-  font-size: 8px;
-  line-height: 10px;
+  font-size: 7px;
+  line-height: 9px;
 }
 
 /* 日期单元格悬停效果 */
@@ -240,17 +229,12 @@ const getStatusText = (status: MonthViewTaskStatus) => {
     grid-template-columns: repeat(7, minmax(0, 1fr));
   }
 
-  .h-24 {
-    height: 6rem;
+  .h-36 {
+    height: 9rem;
   }
-  .h-32 {
-    height: 8rem;
-  }
-  .h-40 {
-    height: 10rem;
-  }
-  .h-48 {
-    height: 12rem;
+
+  .max-h-24 {
+    max-height: 6rem;
   }
 
   .p-2 {
@@ -270,16 +254,24 @@ const getStatusText = (status: MonthViewTaskStatus) => {
     height: 1.25rem;
   }
 
-  /* 任务名称8px字体 */
+  /* 任务名称7px字体 */
   .task-name {
-    font-size: 8px;
-    line-height: 10px;
+    font-size: 7px;
+    line-height: 9px;
   }
 }
 
 @media (max-width: 375px) {
   .gap-2 {
     gap: 0.125rem;
+  }
+
+  .h-36 {
+    height: 8rem;
+  }
+
+  .max-h-24 {
+    max-height: 5rem;
   }
 
   .p-2 {
@@ -291,10 +283,10 @@ const getStatusText = (status: MonthViewTaskStatus) => {
     line-height: 0.75rem;
   }
 
-  /* 任务名称8px字体 */
+  /* 任务名称6px字体 */
   .task-name {
-    font-size: 8px;
-    line-height: 10px;
+    font-size: 6px;
+    line-height: 8px;
   }
 }
 </style>

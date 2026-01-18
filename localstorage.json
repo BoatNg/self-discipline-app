@@ -1,152 +1,145 @@
 {
-  "tasks": [
-    {
-      "id": "1768620329370",
-      "name": "不要熬夜",
-      "type": "DONT_WANT",
-      "isEnabled": true,
-      "startDate": 1768579200000,
-      "endDate": 1771343999999,
-      "periodType": "DAILY"
-    },
-    {
-      "id": "1768660133510",
-      "name": "每天读书30分钟",
-      "type": "DO_WANT",
-      "isEnabled": true,
-      "startDate": 1768579200000,
-      "endDate": 1771343999999,
-      "periodType": "DAILY"
-    }
-  ],
-  "urgeLogs": [
-    {
-      "id": "1768703208121",
-      "timestamp": 1768703208121,
-      "assignedIntervention": "TIMER",
-      "isCompleted": false,
-      "outcome": null,
-      "taskId": "1768620329370"
-    },
-    {
-      "id": "1768662129075",
-      "timestamp": 1768662129075,
-      "assignedIntervention": "BREATHE",
-      "isCompleted": true,
-      "outcome": "relapsed",
-      "taskId": "1768620329370"
-    },
-    {
-      "id": "1768661107192",
-      "timestamp": 1768661107192,
-      "assignedIntervention": "BREATHE",
-      "isCompleted": false,
-      "outcome": null,
-      "taskId": "1768620329370"
-    },
-    {
-      "id": "1768660158654",
-      "timestamp": 1768660158654,
-      "assignedIntervention": "BREATHE",
-      "isCompleted": false,
-      "outcome": null,
-      "taskId": "1768620329370"
-    },
-    {
-      "id": "1768660109781",
-      "timestamp": 1768660109781,
-      "assignedIntervention": "TIMER",
-      "isCompleted": true,
-      "outcome": "resisted",
-      "taskId": "1768620329370"
-    },
-    {
-      "id": "1768624870147",
-      "timestamp": 1768624870147,
-      "assignedIntervention": "TIMER",
-      "isCompleted": true,
-      "outcome": null,
-      "taskId": "1768620329370"
-    },
-    {
-      "id": "1768620963462",
-      "timestamp": 1768620963462,
-      "assignedIntervention": "BREATHE",
-      "isCompleted": false,
-      "outcome": null,
-      "taskId": "1768620329370"
-    },
-    {
-      "id": "1768620961465",
-      "timestamp": 1768620961465,
-      "assignedIntervention": "DUMP",
-      "isCompleted": false,
-      "outcome": null,
-      "taskId": "1768620329370"
-    },
-    {
-      "id": "1768620959375",
-      "timestamp": 1768620959375,
-      "assignedIntervention": "DUMP",
-      "isCompleted": false,
-      "outcome": null,
-      "taskId": "1768620329370"
-    },
-    {
-      "id": "1768620957011",
-      "timestamp": 1768620957011,
-      "assignedIntervention": "TIMER",
-      "isCompleted": false,
-      "outcome": null,
-      "taskId": "1768620329370"
-    },
-    {
-      "id": "1768620954382",
-      "timestamp": 1768620954382,
-      "assignedIntervention": "DUMP",
-      "isCompleted": false,
-      "outcome": null,
-      "taskId": "1768620329370"
-    },
-    {
-      "id": "1768620432105",
-      "timestamp": 1768620432105,
-      "assignedIntervention": "BREATHE",
-      "isCompleted": false,
-      "outcome": null,
-      "taskId": "1768620329370"
-    },
-    {
-      "id": "1768620429657",
-      "timestamp": 1768620429657,
-      "assignedIntervention": "DUMP",
-      "isCompleted": false,
-      "outcome": null,
-      "taskId": "1768620329370"
-    },
-    {
-      "id": "1768620332012",
-      "timestamp": 1768620332012,
-      "assignedIntervention": "BREATHE",
-      "isCompleted": true,
-      "outcome": "resisted",
-      "taskId": "1768620329370"
-    }
-  ],
-  "checkInRecords": [
-    {
-      "id": "1768660139823",
-      "taskId": "1768660133510",
-      "timestamp": 1768660139823,
-      "isCompleted": true,
-      "dateKey": "2026-1-17"
-    },
-    {
-      "id": "1768703203222",
-      "taskId": "1768660133510",
-      "timestamp": 1768703203222,
-      "isCompleted": true,
-      "dateKey": "2026-1-18"
-    }
-  ]
+    "tasks": [
+        {
+            "id": "1768620329370",
+            "name": "不要熬夜",
+            "type": "DONT_WANT",
+            "isEnabled": true,
+            "startDate": 1768579200000,
+            "endDate": 1771343999999,
+            "periodType": "DAILY"
+        },
+        {
+            "id": "1768660133510",
+            "name": "每天读书30分钟",
+            "type": "DO_WANT",
+            "isEnabled": true,
+            "startDate": 1768579200000,
+            "endDate": 1771343999999,
+            "periodType": "DAILY"
+        }
+    ],
+    "urgeLogs": [
+        {
+            "id": "1768703208121",
+            "timestamp": 1768703208121,
+            "assignedIntervention": "TIMER",
+            "isCompleted": false,
+            "outcome": null,
+            "taskId": "1768620329370"
+        },
+        {
+            "id": "1768662129075",
+            "timestamp": 1768662129075,
+            "assignedIntervention": "BREATHE",
+            "isCompleted": true,
+            "outcome": "relapsed",
+            "taskId": "1768620329370"
+        },
+        {
+            "id": "1768661107192",
+            "timestamp": 1768661107192,
+            "assignedIntervention": "BREATHE",
+            "isCompleted": false,
+            "outcome": null,
+            "taskId": "1768620329370"
+        },
+        {
+            "id": "1768660158654",
+            "timestamp": 1768660158654,
+            "assignedIntervention": "BREATHE",
+            "isCompleted": false,
+            "outcome": null,
+            "taskId": "1768620329370"
+        },
+        {
+            "id": "1768660109781",
+            "timestamp": 1768660109781,
+            "assignedIntervention": "TIMER",
+            "isCompleted": true,
+            "outcome": "resisted",
+            "taskId": "1768620329370"
+        },
+        {
+            "id": "1768624870147",
+            "timestamp": 1768624870147,
+            "assignedIntervention": "TIMER",
+            "isCompleted": true,
+            "outcome": null,
+            "taskId": "1768620329370"
+        },
+        {
+            "id": "1768620963462",
+            "timestamp": 1768620963462,
+            "assignedIntervention": "BREATHE",
+            "isCompleted": false,
+            "outcome": null,
+            "taskId": "1768620329370"
+        },
+        {
+            "id": "1768620961465",
+            "timestamp": 1768620961465,
+            "assignedIntervention": "DUMP",
+            "isCompleted": false,
+            "outcome": null,
+            "taskId": "1768620329370"
+        },
+        {
+            "id": "1768620959375",
+            "timestamp": 1768620959375,
+            "assignedIntervention": "DUMP",
+            "isCompleted": false,
+            "outcome": null,
+            "taskId": "1768620329370"
+        },
+        {
+            "id": "1768620957011",
+            "timestamp": 1768620957011,
+            "assignedIntervention": "TIMER",
+            "isCompleted": false,
+            "outcome": null,
+            "taskId": "1768620329370"
+        },
+        {
+            "id": "1768620954382",
+            "timestamp": 1768620954382,
+            "assignedIntervention": "DUMP",
+            "isCompleted": false,
+            "outcome": null,
+            "taskId": "1768620329370"
+        },
+        {
+            "id": "1768620432105",
+            "timestamp": 1768620432105,
+            "assignedIntervention": "BREATHE",
+            "isCompleted": false,
+            "outcome": null,
+            "taskId": "1768620329370"
+        },
+        {
+            "id": "1768620429657",
+            "timestamp": 1768620429657,
+            "assignedIntervention": "DUMP",
+            "isCompleted": false,
+            "outcome": null,
+            "taskId": "1768620329370"
+        },
+        {
+            "id": "1768620332012",
+            "timestamp": 1768620332012,
+            "assignedIntervention": "BREATHE",
+            "isCompleted": true,
+            "outcome": "resisted",
+            "taskId": "1768620329370"
+        }
+    ],
+    "checkInRecords": [
+        {
+            "id": "1768660139823",
+            "taskId": "1768660133510",
+            "timestamp": 1768660139823,
+            "isCompleted": true,
+            "dateKey": "2026-1-17"
+        }
+    ]
 }
