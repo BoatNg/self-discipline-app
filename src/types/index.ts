@@ -53,6 +53,36 @@ export interface CheckInRecord {
   dateKey: string // 格式: 'YYYY-MM-DD'，用于去重判断
 }
 
+// 记录页升级相关类型
+export type TaskDayStatus = 'SUCCESS' | 'FAILURE' | 'PENDING'
+
+export interface TaskDayState {
+  taskId: string
+  dateKey: string // YYYY-MM-DD
+  status: TaskDayStatus
+}
+
+export interface TaskProgress {
+  taskId: string
+  taskName: string
+  taskType: TaskType
+  streakDays: number // 最近连续天数
+  isEnabled: boolean
+}
+
+export interface CalendarDayData {
+  dateKey: string // YYYY-MM-DD
+  date: Date
+  isToday: boolean
+  isPast: boolean
+  taskStates: Record<string, TaskDayStatus> // taskId -> status
+}
+
+export interface CalendarViewData {
+  days: CalendarDayData[]
+  tasks: Task[]
+}
+
 export interface AppState {
   tasks: Task[]
   urgeLogs: UrgeLog[]

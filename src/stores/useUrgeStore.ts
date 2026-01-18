@@ -11,48 +11,29 @@ import type {
   TaskStatus,
   CheckInRecord
 } from '@/types'
+import {
+  generateCalendarData,
+  getTaskProgresses,
+  calculateTaskDayStatus,
+  calculateTaskStreak
+} from '@/utils/streakCalculator'
+import {
+  generateWeekViewData,
+  getPreviousWeekStart,
+  getNextWeekStart,
+  formatWeekRange
+} from '@/utils/weekCalendar'
+import {
+  generateMonthViewData,
+  getPreviousMonthStart,
+  getNextMonthStart,
+  formatMonthText
+} from '@/utils/monthCalendar'
 
 export const useUrgeStore = defineStore(
   'urge',
   () => {
-    const tasks = ref<Task[]>([
-      {
-        id: '1',
-        name: '不刷短视频',
-        type: 'DONT_WANT' as TaskType,
-        isEnabled: true,
-        startDate: Date.now() - 7 * 24 * 60 * 60 * 1000, // 7天前
-        endDate: Date.now() + 23 * 24 * 60 * 60 * 1000, // 23天后
-        periodType: 'DAILY' as PeriodType
-      },
-      {
-        id: '2',
-        name: '不吃零食',
-        type: 'DONT_WANT' as TaskType,
-        isEnabled: true,
-        startDate: Date.now() - 7 * 24 * 60 * 60 * 1000,
-        endDate: Date.now() + 23 * 24 * 60 * 60 * 1000,
-        periodType: 'DAILY' as PeriodType
-      },
-      {
-        id: '3',
-        name: '不冲动购物',
-        type: 'DONT_WANT' as TaskType,
-        isEnabled: true,
-        startDate: Date.now() - 7 * 24 * 60 * 60 * 1000,
-        endDate: Date.now() + 23 * 24 * 60 * 60 * 1000,
-        periodType: 'DAILY' as PeriodType
-      },
-      {
-        id: '4',
-        name: '每天读书30分钟',
-        type: 'DO_WANT' as TaskType,
-        isEnabled: true,
-        startDate: Date.now() - 3 * 24 * 60 * 60 * 1000, // 3天前
-        endDate: Date.now() + 27 * 24 * 60 * 60 * 1000, // 27天后
-        periodType: 'DAILY' as PeriodType
-      }
-    ])
+    const tasks = ref<Task[]>([])
 
     const urgeLogs = ref<UrgeLog[]>([])
     const checkInRecords = ref<CheckInRecord[]>([]) // 新增：打卡记录
@@ -60,6 +41,12 @@ export const useUrgeStore = defineStore(
     const currentInterventionType = ref<InterventionType | null>(null)
     const isInIntervention = ref(false)
     const currentInterventionStartTime = ref<number | null>(null)
+
+    // 周视图相关状态
+    const currentWeekStart = ref<Date>(new Date())
+
+    // 月视图相关状态
+    const currentMonthStart = ref<Date>(new Date())
 
     const todayCount = computed(() => {
       const today = new Date()
@@ -305,6 +292,83 @@ export const useUrgeStore = defineStore(
       return Math.round((completedToday / todayDoWantTasks.length) * 100)
     })
 
+    // 记录页升级相关计算属性
+    const taskProgresses = computed(() => {
+      return getTaskProgresses(tasks.value, urgeLogs.value, checkInRecords.value)
+    })
+
+    const calendarData = computed(() => {
+      return generateCalendarData(tasks.value, urgeLogs.value, checkInRecords.value, 30)
+    })
+
+    // 周视图相关计算属性和方法
+    const weekViewData = computed(() => {
+      return generateWeekViewData(
+        tasks.value,
+        urgeLogs.value,
+        checkInRecords.value,
+        currentWeekStart.value
+      )
+    })
+
+    const currentWeekRangeText = computed(() => {
+      return formatWeekRange(weekViewData.value.weekStartDate, weekViewData.value.weekEndDate)
+    })
+
+    const goToPreviousWeek = () => {
+      currentWeekStart.value = getPreviousWeekStart(currentWeekStart.value)
+    }
+
+    const goToNextWeek = () => {
+      currentWeekStart.value = getNextWeekStart(currentWeekStart.value)
+    }
+
+    const goToCurrentWeek = () => {
+      currentWeekStart.value = new Date()
+    }
+
+    // 月视图相关计算属性和方法
+    const monthViewData = computed(() => {
+      return generateMonthViewData(
+        tasks.value,
+        urgeLogs.value,
+        checkInRecords.value,
+        currentMonthStart.value
+      )
+    })
+
+    const currentMonthText = computed(() => {
+      return formatMonthText(monthViewData.value.year, monthViewData.value.month)
+    })
+
+    const goToPreviousMonth = () => {
+      currentMonthStart.value = getPreviousMonthStart(currentMonthStart.value)
+    }
+
+    const goToNextMonth = () => {
+      currentMonthStart.value = getNextMonthStart(currentMonthStart.value)
+    }
+
+    const goToCurrentMonth = () => {
+      currentMonthStart.value = new Date()
+    }
+
+    // 获取单个任务的连续天数
+    const getTaskStreak = (taskId: string) => {
+      const task = tasks.value.find((t) => t.id === taskId)
+      if (!task) return 0
+
+      return calculateTaskStreak(task, new Date(), urgeLogs.value, checkInRecords.value)
+    }
+
+    // 获取单个任务在某天的状态
+    const getTaskDayStatus = (taskId: string, date: Date) => {
+      const task = tasks.value.find((t) => t.id === taskId)
+      if (!task) return null
+
+      return calculateTaskDayStatus(task, date, urgeLogs.value, checkInRecords.value)
+    }
+
     const addTask = (
       name: string,
       type: TaskType = 'DONT_WANT',
@@ -438,6 +502,21 @@ export const useUrgeStore = defineStore(
       expiredTasks,
       todayCheckInCount,
       todayDoWantCompletionRate,
+      taskProgresses,
+      calendarData,
+      currentWeekStart,
+      weekViewData,
+      currentWeekRangeText,
+      goToPreviousWeek,
+      goToNextWeek,
+      goToCurrentWeek,
+      // 月视图相关
+      currentMonthStart,
+      monthViewData,
+      currentMonthText,
+      goToPreviousMonth,
+      goToNextMonth,
+      goToCurrentMonth,
       addTask,
       toggleTask,
       startIntervention,
@@ -454,7 +533,9 @@ export const useUrgeStore = defineStore(
       isTaskExpired,
       isTaskActive,
       calculateTaskStatus,
-      checkIn
+      checkIn,
+      getTaskStreak,
+      getTaskDayStatus
     }
   },
   {

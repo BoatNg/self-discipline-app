@@ -24,8 +24,14 @@ const router = createRouter({
     },
     {
       path: '/history',
-      name: 'history',
-      component: () => import('@/views/HistoryView.vue'),
+      name: 'history-overview',
+      component: () => import('@/views/HistoryOverviewView.vue'),
+      meta: { title: '记录总览' }
+    },
+    {
+      path: '/history/detail',
+      name: 'history-detail',
+      component: () => import('@/views/HistoryDetailView.vue'),
       meta: { title: '历史记录' }
     },
     {
