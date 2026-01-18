@@ -59,6 +59,12 @@ const router = createRouter({
       meta: { title: '认证回调', public: true }
     },
     {
+      path: '/auth/update-password',
+      name: 'auth-update-password',
+      component: () => import('@/views/AuthUpdatePasswordView.vue'),
+      meta: { title: '重置密码', public: true }
+    },
+    {
       path: '/:pathMatch(.*)*',
       redirect: '/'
     }

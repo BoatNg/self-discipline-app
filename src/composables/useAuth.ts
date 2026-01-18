@@ -12,9 +12,13 @@ export function useAuth() {
     error.value = null
 
     try {
+      const emailRedirectTo = `${window.location.origin}/auth/callback`
       const { data, error: authError } = await supabase.auth.signUp({
         email,
-        password
+        password,
+        options: {
+          emailRedirectTo
+        }
       })
 
       if (authError) {
@@ -91,12 +95,59 @@ export function useAuth() {
     }
   }
 
+  const resetPasswordForEmail = async (email: string): Promise<AuthResult> => {
+    isLoading.value = true
+    error.value = null
+
+    try {
+      const redirectTo = `${window.location.origin}/auth/update-password`
+      const { error: authError } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo
+      })
+
+      if (authError) {
+        throw new Error(authError.message)
+      }
+
+      return { success: true, user: null }
+    } catch (err) {
+      error.value = (err as AuthError).message || '发送重置密码邮件失败'
+      return { success: false, error: error.value }
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  const updateUserPassword = async (newPassword: string): Promise<AuthResult> => {
+    isLoading.value = true
+    error.value = null
+
+    try {
+      const { data, error: authError } = await supabase.auth.updateUser({
+        password: newPassword
+      })
+
+      if (authError) {
+        throw new Error(authError.message)
+      }
+
+      return { success: true, user: data.user }
+    } catch (err) {
+      error.value = (err as AuthError).message || '更新密码失败'
+      return { success: false, error: error.value }
+    } finally {
+      isLoading.value = false
+    }
+  }
+
   return {
     isLoading,
     error,
     signUp,
     signIn,
     signOut,
-    getCurrentUser
+    getCurrentUser,
+    resetPasswordForEmail,
+    updateUserPassword
   }
 }

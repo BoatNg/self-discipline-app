@@ -202,7 +202,7 @@
           </button>
 
           <button
-            @click="authStore.signOut()"
+            @click="handleSignOut"
             :disabled="syncLoading"
             class="btn-secondary w-full text-sm border-calm-200"
           >
@@ -455,6 +455,26 @@ const confirmRestore = async () => {
   } finally {
     syncLoading.value = false
     pendingUploadData.value = null
+  }
+}
+
+const handleSignOut = async () => {
+  try {
+    syncLoading.value = true
+    const result = await authStore.signOut()
+    if (result.success) {
+      // 退出登录成功后重置相关状态
+      showSuccess('已退出登录')
+      // 重置本地状态变量
+      lastSyncTime.value = null
+    } else {
+      showError('退出登录失败: ' + result.error)
+    }
+  } catch (err) {
+    console.error('退出登录异常:', err)
+    showError('退出登录失败')
+  } finally {
+    syncLoading.value = false
   }
 }
 
