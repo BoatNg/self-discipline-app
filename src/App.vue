@@ -1,20 +1,20 @@
 <template>
   <div class="min-h-screen bg-calm-50">
-    <header v-if="showHeader" class="sticky top-0 z-10 bg-white shadow-sm">
+    <header v-if="showHeader" class="sticky top-0 z-10 bg-white shadow-sm safe-top">
       <div class="container mx-auto px-4 py-3">
         <h1 class="text-xl font-semibold text-calm-800">{{ currentTitle }}</h1>
       </div>
     </header>
 
-    <main class="container mx-auto px-4 py-6" :class="{ 'pb-20': showNavigation }">
+    <main class="container mx-auto px-4 py-6 safe-bottom" :class="{ 'pb-safe': showNavigation }">
       <router-view />
     </main>
 
     <nav
       v-if="showNavigation"
-      class="fixed bottom-0 left-0 right-0 bg-white border-t border-calm-200"
+      class="fixed bottom-0 left-0 right-0 bg-white border-t border-calm-200 navigation-safe"
     >
-      <div class="flex justify-around items-center h-16">
+      <div class="flex justify-around items-center h-16 safe-bottom">
         <router-link
           v-for="item in navigationItems"
           :key="item.to"
