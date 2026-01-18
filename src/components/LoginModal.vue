@@ -57,8 +57,14 @@
         </div>
 
         <div v-if="error" class="mb-4">
-          <div class="bg-red-50 text-red-600 text-sm px-4 py-3 rounded-lg flex items-start">
-            <div class="mr-2">⚠️</div>
+          <div
+            class="text-sm px-4 py-3 rounded-lg flex items-start"
+            :class="{
+              'bg-red-50 text-red-600': error.includes('失败') || error.includes('错误'),
+              'bg-green-50 text-green-600': !error.includes('失败') && !error.includes('错误')
+            }"
+          >
+            <div class="mr-2">{{ error.includes('成功') ? '✅' : '⚠️' }}</div>
             <div>{{ error }}</div>
           </div>
         </div>
@@ -153,8 +159,27 @@ const handleSubmit = async () => {
     }
 
     if (result.success) {
-      emit('success')
-      closeModal()
+      if (isLogin.value) {
+        // 登录成功：正常流程
+        emit('success')
+        closeModal()
+      } else {
+        // 注册成功：显示验证提醒
+        if (result.needsEmailVerification) {
+          // 显示绿色成功提示
+          error.value = '注册成功！请检查邮箱完成验证。验证后可登录。'
+          // 保留邮箱（显示成功），清空密码
+          password.value = ''
+          confirmPassword.value = ''
+          isLogin.value = true
+          // 不触发 success，不关闭弹窗
+          // 用户可以切换登录模式或手动关闭
+        } else {
+          // 邮箱已验证（理论上不会到这里，但保留逻辑）
+          emit('success')
+          closeModal()
+        }
+      }
     } else {
       error.value = result.error || '操作失败'
     }

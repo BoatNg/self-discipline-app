@@ -113,3 +113,24 @@ export interface SyncConflictInfo {
   remoteUpdatedAt?: Date
   localLastSyncTime?: Date | null
 }
+
+// 认证相关类型
+export interface AuthUser {
+  id: string
+  email?: string
+}
+
+export interface AuthSuccessResult {
+  success: true
+  user: AuthUser | null
+  needsEmailVerification?: boolean
+  emailConfirmed?: boolean
+}
+
+export interface AuthErrorResult {
+  success: false
+  error: string
+  user?: undefined
+}
+
+export type AuthResult = AuthSuccessResult | AuthErrorResult

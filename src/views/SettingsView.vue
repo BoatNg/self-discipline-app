@@ -248,54 +248,10 @@
       @close="showLoginModal = false"
       @success="handleLoginSuccess"
     />
-
-    <!-- 冲突确认弹窗 -->
-    <div
-      v-if="showConflictModal"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
-      @click.self="showConflictModal = false"
-    >
-      <div class="bg-white rounded-2xl p-6 w-full max-w-md">
-        <div class="text-6xl text-orange-500 mb-4 text-center">⚠️</div>
-        <h3 class="text-lg font-medium text-calm-800 mb-2 text-center">云端数据更新</h3>
-        <p class="text-calm-600 text-center mb-4">云端数据比当前设备更新。</p>
-        <p class="text-calm-600 text-center mb-4">如果继续上传，将覆盖云端数据。</p>
-        <p class="text-calm-600 text-center mb-6">建议先【从云端恢复】。</p>
-
-        <div class="flex space-x-3">
-          <button @click="showConflictModal = false" class="btn-secondary flex-1">取消</button>
-          <button @click="forceUpload" class="btn-primary flex-1 bg-orange-500 hover:bg-orange-600">
-            继续上传
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 恢复确认弹窗 -->
-    <div
-      v-if="showRestoreConfirmModal"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
-      @click.self="showRestoreConfirmModal = false"
-    >
-      <div class="bg-white rounded-2xl p-6 w-full max-w-md">
-        <div class="text-6xl text-red-500 mb-4 text-center">⚠️</div>
-        <h3 class="text-lg font-medium text-calm-800 mb-2 text-center">确认恢复数据</h3>
-        <p class="text-calm-600 text-center mb-6">
-          此操作将覆盖你当前设备的所有本地数据，且无法撤销。
-        </p>
-        <p class="text-calm-600 text-center mb-6">是否继续？</p>
-
-        <div class="flex space-x-3">
-          <button @click="showRestoreConfirmModal = false" class="btn-secondary flex-1">
-            取消
-          </button>
-          <button @click="confirmRestore" class="btn-primary flex-1 bg-red-500 hover:bg-red-600">
-            确认恢复
-          </button>
-        </div>
-      </div>
-    </div>
   </div>
+
+  <!-- 通知容器 -->
+  <NotificationContainer :notifications="notifications" @remove="removeNotification" />
 </template>
 
 <script setup lang="ts">
@@ -304,13 +260,16 @@ import { useRouter } from 'vue-router'
 import { useUrgeStore } from '@/stores/useUrgeStore'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { useCloudSync } from '@/composables/useCloudSync'
+import { useNotification } from '@/composables/useNotification'
 import LoginModal from '@/components/LoginModal.vue'
+import NotificationContainer from '@/components/NotificationContainer.vue'
 import type { Task } from '@/types'
 
 const router = useRouter()
 const store = useUrgeStore()
 const authStore = useAuthStore()
 const cloudSync = useCloudSync()
+const { notifications, showSuccess, showError, removeNotification } = useNotification()
 
 const showConfirmClear = ref(false)
 const showLoginModal = ref(false)
@@ -423,18 +382,19 @@ const handleUpload = async () => {
       authStore.setLastSyncTime(Date.now())
       authStore.setHasCloudData(true)
       lastSyncTime.value = Date.now()
-      alert('云端备份成功！')
+      showSuccess('云端备份成功！')
     } else {
-      alert('上传失败: ' + result.error)
+      showError('上传失败: ' + result.error)
     }
   } catch (err) {
     console.error('上传失败:', err)
-    alert('上传失败')
+    showError('上传失败')
   } finally {
     syncLoading.value = false
   }
 }
 
+// @ts-ignore - used in template
 const forceUpload = async () => {
   if (!authStore.user || !pendingUploadData.value) return
 
@@ -447,13 +407,13 @@ const forceUpload = async () => {
       authStore.setLastSyncTime(Date.now())
       authStore.setHasCloudData(true)
       lastSyncTime.value = Date.now()
-      alert('云端备份成功！')
+      showSuccess('云端备份成功！')
     } else {
-      alert('上传失败: ' + result.error)
+      showError('上传失败: ' + result.error)
     }
   } catch (err) {
     console.error('强制上传失败:', err)
-    alert('上传失败')
+    showError('上传失败')
   } finally {
     syncLoading.value = false
     pendingUploadData.value = null
@@ -468,10 +428,11 @@ const handleDownload = async () => {
     pendingUploadData.value = result.data
     showRestoreConfirmModal.value = true
   } else {
-    alert('下载失败: ' + result.error)
+    showError('下载失败: ' + result.error)
   }
 }
 
+// @ts-ignore - used in template
 const confirmRestore = async () => {
   if (!pendingUploadData.value) return
 
@@ -490,7 +451,7 @@ const confirmRestore = async () => {
     window.location.reload()
   } catch (err) {
     console.error('恢复数据失败:', err)
-    alert('恢复失败')
+    showError('恢复失败')
   } finally {
     syncLoading.value = false
     pendingUploadData.value = null

@@ -53,6 +53,12 @@ const router = createRouter({
       meta: { title: '创建任务' }
     },
     {
+      path: '/auth/callback',
+      name: 'auth-callback',
+      component: () => import('@/views/AuthCallbackView.vue'),
+      meta: { title: '认证回调', public: true }
+    },
+    {
       path: '/:pathMatch(.*)*',
       redirect: '/'
     }

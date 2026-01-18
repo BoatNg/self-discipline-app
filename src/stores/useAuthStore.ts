@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useAuth } from '@/composables/useAuth'
 import { supabase } from '@/utils/supabase'
+import type { AuthResult } from '@/types'
 
 interface User {
   id: string
@@ -39,14 +40,18 @@ export const useAuthStore = defineStore(
       }
     }
 
-    const signUp = async (email: string, password: string) => {
+    const signUp = async (email: string, password: string): Promise<AuthResult> => {
       isLoading.value = true
       const result = await signUpAuth(email, password)
 
-      if (result.success && result.user) {
+      // 重要：注册成功后不自动设置 user.value
+      // 即使返回了用户对象，也要等邮箱验证完成
+      // 用户需要通过 signIn 方法登录
+      // 只在用户确认邮件后才设置登录状态
+      if (result.success && result.emailConfirmed) {
         user.value = {
-          id: result.user.id,
-          email: result.user.email || ''
+          id: result.user!.id,
+          email: result.user!.email || ''
         }
       }
 
@@ -54,7 +59,7 @@ export const useAuthStore = defineStore(
       return result
     }
 
-    const signIn = async (email: string, password: string) => {
+    const signIn = async (email: string, password: string): Promise<AuthResult> => {
       isLoading.value = true
       const result = await signInAuth(email, password)
 

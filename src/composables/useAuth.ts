@@ -1,12 +1,13 @@
 import { ref } from 'vue'
 import { supabase } from '@/utils/supabase'
 import type { AuthError } from '@supabase/supabase-js'
+import type { AuthResult } from '@/types'
 
 export function useAuth() {
   const isLoading = ref(false)
   const error = ref<string | null>(null)
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (email: string, password: string): Promise<AuthResult> => {
     isLoading.value = true
     error.value = null
 
@@ -20,7 +21,15 @@ export function useAuth() {
         throw new Error(authError.message)
       }
 
-      return { success: true, user: data.user }
+      // Supabase signUp 会返回用户对象，但 email_confirmed_at 通常为 null
+      // 如果启用了邮箱验证，用户需要验证后才能登录
+      const needsEmailVerification = !data.user?.email_confirmed_at
+      return {
+        success: true,
+        user: data.user,
+        needsEmailVerification,
+        emailConfirmed: !!data.user?.email_confirmed_at
+      }
     } catch (err) {
       error.value = (err as AuthError).message || '注册失败'
       return { success: false, error: error.value }
@@ -29,7 +38,7 @@ export function useAuth() {
     }
   }
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (email: string, password: string): Promise<AuthResult> => {
     isLoading.value = true
     error.value = null
 
