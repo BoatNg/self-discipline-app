@@ -184,8 +184,12 @@ const createTask = async () => {
 
   try {
     // 验证日期
-    const startTimestamp = new Date(form.value.startDate).getTime()
-    const endTimestamp = new Date(form.value.endDate).getTime()
+    const startDateObj = new Date(form.value.startDate)
+    const endDateObj = new Date(form.value.endDate)
+    startDateObj.setHours(0, 0, 0, 0)
+    endDateObj.setHours(0, 0, 0, 0)
+    const startTimestamp = startDateObj.getTime()
+    const endTimestamp = endDateObj.getTime()
 
     if (endTimestamp <= startTimestamp) {
       throw new Error('结束日期必须晚于开始日期')
