@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="showDebug"
-    class="fixed bottom-4 right-4 bg-white shadow-lg rounded-lg p-4 max-w-xs z-50 border border-calm-200"
+    class="fixed bottom-4 right-4 bg-white shadow-lg rounded-lg p-4 max-w-xs z-50 border border-calm-200 pwa-debug-safe ios-action-safe"
   >
     <div class="text-sm font-medium text-calm-800 mb-2">PWA状态调试</div>
 

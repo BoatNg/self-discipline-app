@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-center min-h-[calc(100vh-160px)]">
+  <div class="flex flex-col items-center justify-center min-h-[calc(100vh-160px)] safe-insets">
     <!-- 页面标题 -->
     <div class="mb-8 text-center">
       <h2 class="text-2xl font-medium text-calm-800 mb-4">这一刻，最接近的是哪种感觉？</h2>

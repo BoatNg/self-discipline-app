@@ -58,7 +58,7 @@
           day.isToday ? 'ring-2 ring-calm-500 ring-offset-1' : '',
           day.isCurrentMonth ? 'cursor-pointer hover:shadow-sm transition-shadow' : 'cursor-default'
         ]"
-        class="rounded-lg p-2 flex flex-col h-36 overflow-hidden"
+        class="rounded-lg p-2 flex flex-col h-20 overflow-hidden"
       >
         <!-- 日期数字 -->
         <div class="flex justify-between items-start mb-1">
@@ -80,33 +80,30 @@
         </div>
 
         <!-- 任务状态列表（移动端优化） -->
-        <div
-          v-if="day.isCurrentMonth && day.taskStatusDetails.length > 0"
-          class="flex-1 overflow-y-auto max-h-24"
-        >
-          <div class="space-y-1">
-            <div
-              v-for="taskDetail in day.taskStatusDetails"
-              :key="taskDetail.taskId"
-              :class="getTaskStatusColorClass(taskDetail.status)"
-              class="task-name whitespace-normal break-words"
-              :title="`${taskDetail.taskName}: ${getStatusText(taskDetail.status)}`"
-            >
-              {{ taskDetail.taskName }}
+        <template v-if="day.isCurrentMonth">
+          <div v-if="day.taskStatusDetails.length > 0" class="flex-1 overflow-y-auto max-h-14">
+            <div class="flex flex-col items-center justify-center py-1 space-y-1">
+              <div
+                v-for="taskDetail in day.taskStatusDetails"
+                :key="taskDetail.taskId"
+                class="flex items-center justify-center"
+                :title="`${taskDetail.taskName}: ${getStatusText(taskDetail.status)}`"
+              >
+                <div
+                  class="w-2.5 h-2.5 rounded-full"
+                  :class="getTaskStatusDotClass(taskDetail.status)"
+                ></div>
+              </div>
             </div>
           </div>
-        </div>
-
-        <!-- 无任务状态（空白） -->
-        <div
-          v-else-if="day.isCurrentMonth && day.taskStatusDetails.length === 0"
-          class="flex-1"
-        ></div>
-
-        <!-- 非当月日期提示 -->
-        <div v-else class="flex-1 flex items-center justify-center">
-          <div class="text-xs text-gray-400 italic">非当月</div>
-        </div>
+          <div v-else class="flex-1"></div>
+        </template>
+        <template v-else>
+          <!-- 非当月日期提示 -->
+          <div class="flex-1 flex items-center justify-center">
+            <div class="text-xs text-gray-400 italic">非当月</div>
+          </div>
+        </template>
       </div>
     </div>
 
@@ -126,24 +123,24 @@
           </div>
         </div>
         <div class="flex items-center">
-          <div class="text-green-600 text-xs font-medium mr-2">成功</div>
+          <div class="w-2.5 h-2.5 rounded-full bg-green-500 mr-2"></div>
           <div>
-            <div class="text-xs text-calm-600">任务完成</div>
-            <div class="text-xs text-calm-400">绿色文字</div>
+            <div class="text-xs text-calm-600">成功</div>
+            <div class="text-xs text-calm-400">任务完成</div>
           </div>
         </div>
         <div class="flex items-center">
-          <div class="text-red-600 text-xs font-medium mr-2">失败</div>
+          <div class="w-2.5 h-2.5 rounded-full bg-red-500 mr-2"></div>
           <div>
-            <div class="text-xs text-calm-600">任务未完成</div>
-            <div class="text-xs text-calm-400">红色文字</div>
+            <div class="text-xs text-calm-600">失败</div>
+            <div class="text-xs text-calm-400">任务未完成</div>
           </div>
         </div>
         <div class="flex items-center">
-          <div class="text-gray-400 text-xs font-medium mr-2">未进行</div>
+          <div class="w-2.5 h-2.5 rounded-full bg-gray-400 mr-2"></div>
           <div>
-            <div class="text-xs text-calm-600">今日或未来待完成</div>
-            <div class="text-xs text-calm-400">灰色文字</div>
+            <div class="text-xs text-calm-600">未进行</div>
+            <div class="text-xs text-calm-400">今日或未来待完成</div>
           </div>
         </div>
       </div>
@@ -153,7 +150,6 @@
 
 <script setup lang="ts">
 import type { MonthViewData, MonthViewTaskStatus } from '@/utils/monthCalendar'
-import { getTaskStatusColorClass } from '@/utils/monthCalendar'
 
 interface Props {
   monthData: MonthViewData
@@ -191,6 +187,20 @@ const getStatusText = (status: MonthViewTaskStatus) => {
       return '未知'
   }
 }
+
+// 获取任务状态对应的圆点样式类
+const getTaskStatusDotClass = (status: MonthViewTaskStatus) => {
+  switch (status) {
+    case 'SUCCESS':
+      return 'bg-green-500'
+    case 'FAILURE':
+      return 'bg-red-500'
+    case 'PENDING':
+      return 'bg-gray-400'
+    default:
+      return 'bg-gray-300' // 空白状态
+  }
+}
 </script>
 
 <style scoped>
@@ -198,10 +208,10 @@ const getStatusText = (status: MonthViewTaskStatus) => {
   @apply select-none;
 }
 
-/* 任务名称7px字体（全局） */
-.task-name {
-  font-size: 7px;
-  line-height: 9px;
+/* 任务圆点样式 */
+.task-dot {
+  min-width: 0.625rem;
+  min-height: 0.625rem;
 }
 
 /* 日期单元格悬停效果 */
@@ -229,12 +239,12 @@ const getStatusText = (status: MonthViewTaskStatus) => {
     grid-template-columns: repeat(7, minmax(0, 1fr));
   }
 
-  .h-36 {
-    height: 9rem;
+  .h-20 {
+    height: 5rem;
   }
 
-  .max-h-24 {
-    max-height: 6rem;
+  .max-h-14 {
+    max-height: 3.5rem;
   }
 
   .p-2 {
@@ -254,10 +264,10 @@ const getStatusText = (status: MonthViewTaskStatus) => {
     height: 1.25rem;
   }
 
-  /* 任务名称7px字体 */
-  .task-name {
-    font-size: 7px;
-    line-height: 9px;
+  /* 任务圆点响应式调整 */
+  .task-dot {
+    min-width: 0.5rem;
+    min-height: 0.5rem;
   }
 }
 
@@ -266,12 +276,12 @@ const getStatusText = (status: MonthViewTaskStatus) => {
     gap: 0.125rem;
   }
 
-  .h-36 {
-    height: 8rem;
+  .h-20 {
+    height: 4.5rem;
   }
 
-  .max-h-24 {
-    max-height: 5rem;
+  .max-h-14 {
+    max-height: 3rem;
   }
 
   .p-2 {
@@ -283,10 +293,10 @@ const getStatusText = (status: MonthViewTaskStatus) => {
     line-height: 0.75rem;
   }
 
-  /* 任务名称6px字体 */
-  .task-name {
-    font-size: 6px;
-    line-height: 8px;
+  /* 任务圆点小屏幕调整 */
+  .task-dot {
+    min-width: 0.4375rem;
+    min-height: 0.4375rem;
   }
 }
 </style>

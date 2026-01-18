@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col min-h-[calc(100vh-60px)]">
+  <div class="flex flex-col min-h-[calc(100vh-60px)] safe-insets">
     <!-- 退出按钮 -->
     <div class="flex justify-start mb-6">
       <button

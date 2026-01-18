@@ -1,5 +1,7 @@
 <template>
-  <div class="flex flex-col items-center justify-center min-h-[calc(100vh-140px)] px-4 py-6">
+  <div
+    class="flex flex-col items-center justify-center min-h-[calc(100vh-140px)] px-4 py-6 safe-insets"
+  >
     <!-- 标题区域 -->
     <div class="mb-8 text-center">
       <h2 class="text-2xl font-semibold text-calm-800 mb-2 tracking-wide">跟着呼吸</h2>

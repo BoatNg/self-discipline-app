@@ -27,6 +27,57 @@
       margin-top: auto;
       padding-bottom: env(safe-area-inset-bottom, 20px);
     }
+
+    /* 小屏幕底部导航栏优化 */
+    .nav-compact {
+      height: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+    }
+
+    .nav-icon-small {
+      font-size: 1.5rem;
+    }
+
+    .nav-text-small {
+      font-size: 0.625rem;
+    }
+  }
+
+  /* iPhone安全区域专项优化 */
+  @supports (padding: max(0px)) {
+    .ios-nav-safe {
+      padding-bottom: max(env(safe-area-inset-bottom, 0px), 0.75rem);
+    }
+
+    .ios-action-safe {
+      margin-bottom: max(env(safe-area-inset-bottom, 0px), 0.5rem);
+    }
+  }
+
+  /* 底部行动区域专项优化（针对有底部按钮的页面） */
+  .bottom-action-area {
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 2rem);
+  }
+
+  /* 交互按钮热区优化 */
+  .action-button-safe {
+    min-height: 3rem;
+    padding-top: 0.75rem;
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* 全屏操作按钮安全区域 */
+  .fullscreen-button-safe {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: linear-gradient(
+      to top,
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(255, 255, 255, 0.7) 50%,
+      transparent 100%
+    );
   }
 
   /* 安全区域适配工具类 */
@@ -57,9 +108,82 @@
       env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
   }
 
-  /* 动态底部padding（安全区域 + 导航栏高度） */
+  /* 动态底部padding（安全区域 + 导航栏高度 + 安全间距） */
   .pb-safe {
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 6rem);
+  }
+
+  /* 针对有底部导航栏的页面提供精确的安全间距 */
+  .pb-nav-safe {
+    padding-bottom: calc(
+      env(safe-area-inset-bottom, 0px) + /* 安全区域 */ 4rem + /* 导航栏高度 (h-16) */ 3rem
+        /* 额外内容间距 */
+    );
+  }
+
+  /* 针对长滚动页面的底部安全间距 */
+  .pb-scroll-safe {
+    padding-bottom: calc(
+      env(safe-area-inset-bottom, 0px) + /* 安全区域 */ 4rem + /* 导航栏高度 (h-16) */ 4rem
+        /* 更大的内容间距 */
+    );
+  }
+
+  /* 灵活的底部安全间距类 */
+  .pb-safe-xs {
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem);
+  }
+  .pb-safe-sm {
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 2rem);
+  }
+  .pb-safe-md {
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 3rem);
+  }
+  .pb-safe-lg {
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 4rem);
+  }
+  .pb-safe-xl {
     padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 5rem);
+  }
+  .pb-safe-2xl {
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 6rem);
+  }
+
+  /* 针对有底部导航栏的页面标准间距 */
+  .pb-with-nav {
+    padding-bottom: calc(
+      env(safe-area-inset-bottom, 0px) + /* 安全区域 */ 4rem + /* 导航栏高度 */ 2.5rem
+        /* 标准内容间距 */
+    );
+  }
+
+  /* 针对有底部按钮的页面加大间距 */
+  .pb-with-button {
+    padding-bottom: calc(
+      env(safe-area-inset-bottom, 0px) + /* 安全区域 */ 4rem + /* 导航栏高度 */ 4rem
+        /* 加大内容间距 */
+    );
+  }
+
+  /* 底部导航栏专项优化 */
+  .nav-height-safe {
+    height: calc(4rem + env(safe-area-inset-bottom, 0px));
+    min-height: 4rem;
+  }
+
+  /* 底部固定元素的垂直居中 */
+  .nav-content-safe {
+    padding-top: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* PWA调试面板安全区域适配 */
+  .pwa-debug-safe {
+    margin-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* 底部按钮区域安全适配 */
+  .action-area-safe {
+    padding-bottom: max(env(safe-area-inset-bottom, 0px), 1rem);
   }
 }
 
