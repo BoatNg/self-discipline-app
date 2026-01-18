@@ -248,6 +248,46 @@
       @close="showLoginModal = false"
       @success="handleLoginSuccess"
     />
+
+    <!-- 冲突解决弹窗 -->
+    <div
+      v-if="showConflictModal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+      @click.self="showConflictModal = false"
+    >
+      <div class="bg-white rounded-2xl p-6 w-full max-w-md">
+        <div class="text-6xl text-yellow-500 mb-4 text-center">⚠️</div>
+        <h3 class="text-lg font-medium text-calm-800 mb-2 text-center">云端有更新的数据</h3>
+        <p class="text-calm-600 text-center mb-4">云端的数据比本地数据更新时间更晚。</p>
+        <p class="text-calm-600 text-center mb-6">强制上传将覆盖云端数据。</p>
+
+        <div class="flex space-x-3">
+          <button @click="showConflictModal = false" class="btn-secondary flex-1">取消</button>
+          <button @click="forceUpload" class="btn-primary flex-1">强制上传</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 恢复确认弹窗 -->
+    <div
+      v-if="showRestoreConfirmModal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+      @click.self="showRestoreConfirmModal = false"
+    >
+      <div class="bg-white rounded-2xl p-6 w-full max-w-md">
+        <div class="text-6xl text-blue-500 mb-4 text-center">📥</div>
+        <h3 class="text-lg font-medium text-calm-800 mb-2 text-center">确认从云端恢复</h3>
+        <p class="text-calm-600 text-center mb-4">这将使用云端数据覆盖本地所有任务和记录。</p>
+        <p class="text-calm-600 text-center mb-6">本地现有数据将丢失，无法恢复。确定继续吗？</p>
+
+        <div class="flex space-x-3">
+          <button @click="showRestoreConfirmModal = false" class="btn-secondary flex-1">
+            取消
+          </button>
+          <button @click="confirmRestore" class="btn-primary flex-1">确认恢复</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- 通知容器 -->
@@ -394,7 +434,6 @@ const handleUpload = async () => {
   }
 }
 
-// @ts-ignore - used in template
 const forceUpload = async () => {
   if (!authStore.user || !pendingUploadData.value) return
 
@@ -423,16 +462,23 @@ const forceUpload = async () => {
 const handleDownload = async () => {
   if (!authStore.user) return
 
-  const result = await cloudSync.downloadDataFromCloud(authStore.user.id)
-  if (result.success && result.data) {
-    pendingUploadData.value = result.data
-    showRestoreConfirmModal.value = true
-  } else {
-    showError('下载失败: ' + result.error)
+  syncLoading.value = true
+  try {
+    const result = await cloudSync.downloadDataFromCloud(authStore.user.id)
+    if (result.success && result.data) {
+      pendingUploadData.value = result.data
+      showRestoreConfirmModal.value = true
+    } else {
+      showError('下载失败: ' + result.error)
+    }
+  } catch (err) {
+    console.error('从云端恢复失败:', err)
+    showError('从云端恢复失败')
+  } finally {
+    syncLoading.value = false
   }
 }
 
-// @ts-ignore - used in template
 const confirmRestore = async () => {
   if (!pendingUploadData.value) return
 
@@ -441,14 +487,18 @@ const confirmRestore = async () => {
 
   try {
     const { tasks, urgeLogs, checkInRecords } = pendingUploadData.value
+
+    // 更新store数据 - Pinia的响应式系统会自动更新UI
     store.tasks = tasks
     store.urgeLogs = urgeLogs
     store.checkInRecords = checkInRecords
 
+    // 更新同步时间
     authStore.setLastSyncTime(Date.now())
     lastSyncTime.value = Date.now()
 
-    window.location.reload()
+    // 显示成功通知
+    showSuccess('数据恢复成功！')
   } catch (err) {
     console.error('恢复数据失败:', err)
     showError('恢复失败')
