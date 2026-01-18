@@ -7,7 +7,7 @@
     </header>
 
     <main
-      class="container mx-auto px-4 py-6 safe-bottom"
+      class="container mx-auto px-4 safe-bottom"
       :class="{
         'pb-with-button': showNavigation && route.name === 'home',
         'pb-with-nav': showNavigation && route.name !== 'home'
@@ -20,7 +20,7 @@
       v-if="showNavigation"
       class="fixed bottom-0 left-0 right-0 bg-white border-t border-calm-200 navigation-safe nav-height-safe ios-nav-safe"
     >
-      <div class="flex justify-around items-center h-16 safe-bottom nav-content-safe">
+      <div class="flex justify-around items-center safe-bottom nav-content-safe">
         <router-link
           v-for="item in navigationItems"
           :key="item.to"
