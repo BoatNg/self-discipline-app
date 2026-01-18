@@ -91,3 +91,25 @@ export interface AppState {
   isInIntervention: boolean
   currentInterventionStartTime: number | null
 }
+
+// 云端同步相关类型
+export interface CloudBackupData {
+  tasks: Task[]
+  urgeLogs: UrgeLog[]
+  checkInRecords: CheckInRecord[]
+  lastSyncAt?: number
+}
+
+export interface UserBackup {
+  id: string
+  user_id: string
+  data: CloudBackupData
+  updated_at: string
+  created_at: string
+}
+
+export interface SyncConflictInfo {
+  hasConflict: boolean
+  remoteUpdatedAt?: Date
+  localLastSyncTime?: Date | null
+}

@@ -154,11 +154,69 @@
       </div>
     </div>
 
+    <!-- 云端同步 -->
+    <div class="card mb-6">
+      <h3 class="font-medium text-calm-800 mb-3 flex items-center">
+        <span class="mr-2">☁️</span>
+        云端同步
+      </h3>
+      <p class="text-sm text-calm-500 mb-4">用于备份与恢复本地数据</p>
+
+      <div v-if="!authStore.isAuthenticated">
+        <p class="text-calm-600 mb-4">
+          登录后可将你的数据备份到云端，用于多设备恢复或防止数据丢失。
+        </p>
+        <button @click="showLoginModal = true" class="btn-primary w-full">登录 / 注册</button>
+      </div>
+
+      <div v-else>
+        <div class="mb-4">
+          <p class="text-sm text-calm-600">已登录：{{ authStore.user?.email }}</p>
+          <p v-if="lastSyncTime" class="text-xs text-calm-400 mt-1">
+            上次云端更新时间：{{ formatDate(lastSyncTime) }}
+          </p>
+          <p v-else-if="authStore.hasCloudData" class="text-xs text-calm-400 mt-1">
+            云端有备份数据
+          </p>
+          <p v-else class="text-xs text-calm-400 mt-1">云端暂无备份数据</p>
+        </div>
+
+        <div class="space-y-3">
+          <button
+            @click="handleUpload"
+            :disabled="syncLoading"
+            class="btn-primary w-full flex items-center justify-center"
+          >
+            <span v-if="syncLoading">上传中...</span>
+            <span v-else>☁️ 上传到云端</span>
+          </button>
+
+          <button
+            v-if="authStore.hasCloudData"
+            @click="handleDownload"
+            :disabled="syncLoading"
+            class="btn-secondary w-full flex items-center justify-center"
+          >
+            <span v-if="syncLoading">下载中...</span>
+            <span v-else>📥 从云端恢复</span>
+          </button>
+
+          <button
+            @click="authStore.signOut()"
+            :disabled="syncLoading"
+            class="btn-secondary w-full text-sm border-calm-200"
+          >
+            退出登录
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- 应用信息 -->
     <div class="card">
       <h3 class="font-medium text-calm-800 mb-3">关于应用</h3>
       <div class="text-calm-600 text-sm space-y-2">
-        <p>版本: 1.0.0</p>
+        <p>版本: 1.3.0</p>
         <p>这是一个本地运行的PWA应用，所有数据都保存在您的设备上。</p>
         <p class="text-xs text-calm-400 mt-4">「我不要」- 冲动管理工具</p>
       </div>
@@ -183,18 +241,84 @@
         </div>
       </div>
     </div>
+    <!-- 登录弹窗 -->
+    <LoginModal
+      v-if="showLoginModal"
+      :is-open="showLoginModal"
+      @close="showLoginModal = false"
+      @success="handleLoginSuccess"
+    />
+
+    <!-- 冲突确认弹窗 -->
+    <div
+      v-if="showConflictModal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+      @click.self="showConflictModal = false"
+    >
+      <div class="bg-white rounded-2xl p-6 w-full max-w-md">
+        <div class="text-6xl text-orange-500 mb-4 text-center">⚠️</div>
+        <h3 class="text-lg font-medium text-calm-800 mb-2 text-center">云端数据更新</h3>
+        <p class="text-calm-600 text-center mb-4">云端数据比当前设备更新。</p>
+        <p class="text-calm-600 text-center mb-4">如果继续上传，将覆盖云端数据。</p>
+        <p class="text-calm-600 text-center mb-6">建议先【从云端恢复】。</p>
+
+        <div class="flex space-x-3">
+          <button @click="showConflictModal = false" class="btn-secondary flex-1">取消</button>
+          <button @click="forceUpload" class="btn-primary flex-1 bg-orange-500 hover:bg-orange-600">
+            继续上传
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 恢复确认弹窗 -->
+    <div
+      v-if="showRestoreConfirmModal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+      @click.self="showRestoreConfirmModal = false"
+    >
+      <div class="bg-white rounded-2xl p-6 w-full max-w-md">
+        <div class="text-6xl text-red-500 mb-4 text-center">⚠️</div>
+        <h3 class="text-lg font-medium text-calm-800 mb-2 text-center">确认恢复数据</h3>
+        <p class="text-calm-600 text-center mb-6">
+          此操作将覆盖你当前设备的所有本地数据，且无法撤销。
+        </p>
+        <p class="text-calm-600 text-center mb-6">是否继续？</p>
+
+        <div class="flex space-x-3">
+          <button @click="showRestoreConfirmModal = false" class="btn-secondary flex-1">
+            取消
+          </button>
+          <button @click="confirmRestore" class="btn-primary flex-1 bg-red-500 hover:bg-red-600">
+            确认恢复
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUrgeStore } from '@/stores/useUrgeStore'
+import { useAuthStore } from '@/stores/useAuthStore'
+import { useCloudSync } from '@/composables/useCloudSync'
+import LoginModal from '@/components/LoginModal.vue'
 import type { Task } from '@/types'
 
 const router = useRouter()
 const store = useUrgeStore()
+const authStore = useAuthStore()
+const cloudSync = useCloudSync()
+
 const showConfirmClear = ref(false)
+const showLoginModal = ref(false)
+const showConflictModal = ref(false)
+const showRestoreConfirmModal = ref(false)
+const syncLoading = ref(false)
+const lastSyncTime = ref<number | null>(null)
+const pendingUploadData = ref<any>(null)
 
 // 计算属性：筛选不同类型的任务
 const dontWantTasks = computed(() => {
@@ -247,7 +371,148 @@ const formatDate = (timestamp: number) => {
   } else if (dateTime.getTime() === yesterday.getTime()) {
     return '昨天'
   } else {
-    return `${date.getMonth() + 1}/${date.getDate()}`
+    return `${date.getMonth() + 1}/${date.getDate()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
   }
 }
+
+const handleLoginSuccess = async () => {
+  showLoginModal.value = false
+
+  try {
+    syncLoading.value = true
+    if (authStore.user) {
+      const backup = await cloudSync.getUserBackup(authStore.user.id)
+      authStore.setHasCloudData(!!backup)
+      if (backup?.updated_at) {
+        lastSyncTime.value = new Date(backup.updated_at).getTime()
+      }
+    }
+  } catch (err) {
+    console.error('检查云端数据失败:', err)
+  } finally {
+    syncLoading.value = false
+  }
+}
+
+const handleUpload = async () => {
+  if (!authStore.user) return
+
+  syncLoading.value = true
+  try {
+    const backupData = {
+      tasks: store.tasks,
+      urgeLogs: store.urgeLogs,
+      checkInRecords: store.checkInRecords,
+      lastSyncAt: Date.now()
+    }
+
+    const conflictCheck = await cloudSync.checkForConflicts(
+      authStore.user.id,
+      authStore.lastSyncTime || undefined
+    )
+
+    if (conflictCheck?.hasConflict) {
+      pendingUploadData.value = backupData
+      showConflictModal.value = true
+      syncLoading.value = false
+      return
+    }
+
+    const result = await cloudSync.uploadDataToCloud(authStore.user.id, backupData)
+    if (result.success) {
+      authStore.setLastSyncTime(Date.now())
+      authStore.setHasCloudData(true)
+      lastSyncTime.value = Date.now()
+      alert('云端备份成功！')
+    } else {
+      alert('上传失败: ' + result.error)
+    }
+  } catch (err) {
+    console.error('上传失败:', err)
+    alert('上传失败')
+  } finally {
+    syncLoading.value = false
+  }
+}
+
+const forceUpload = async () => {
+  if (!authStore.user || !pendingUploadData.value) return
+
+  showConflictModal.value = false
+  syncLoading.value = true
+
+  try {
+    const result = await cloudSync.uploadDataToCloud(authStore.user.id, pendingUploadData.value)
+    if (result.success) {
+      authStore.setLastSyncTime(Date.now())
+      authStore.setHasCloudData(true)
+      lastSyncTime.value = Date.now()
+      alert('云端备份成功！')
+    } else {
+      alert('上传失败: ' + result.error)
+    }
+  } catch (err) {
+    console.error('强制上传失败:', err)
+    alert('上传失败')
+  } finally {
+    syncLoading.value = false
+    pendingUploadData.value = null
+  }
+}
+
+const handleDownload = async () => {
+  if (!authStore.user) return
+
+  const result = await cloudSync.downloadDataFromCloud(authStore.user.id)
+  if (result.success && result.data) {
+    pendingUploadData.value = result.data
+    showRestoreConfirmModal.value = true
+  } else {
+    alert('下载失败: ' + result.error)
+  }
+}
+
+const confirmRestore = async () => {
+  if (!pendingUploadData.value) return
+
+  showRestoreConfirmModal.value = false
+  syncLoading.value = true
+
+  try {
+    const { tasks, urgeLogs, checkInRecords } = pendingUploadData.value
+    store.tasks = tasks
+    store.urgeLogs = urgeLogs
+    store.checkInRecords = checkInRecords
+
+    authStore.setLastSyncTime(Date.now())
+    lastSyncTime.value = Date.now()
+
+    window.location.reload()
+  } catch (err) {
+    console.error('恢复数据失败:', err)
+    alert('恢复失败')
+  } finally {
+    syncLoading.value = false
+    pendingUploadData.value = null
+  }
+}
+
+onMounted(async () => {
+  await authStore.initAuth()
+
+  if (authStore.user) {
+    try {
+      syncLoading.value = true
+      const backup = await cloudSync.getUserBackup(authStore.user.id)
+      authStore.setHasCloudData(!!backup)
+      if (backup?.updated_at) {
+        lastSyncTime.value = new Date(backup.updated_at).getTime()
+      }
+    } catch (err) {
+      console.error('初始化云端数据状态失败:', err)
+    } finally {
+      syncLoading.value = false
+    }
+  }
+})
 </script>
