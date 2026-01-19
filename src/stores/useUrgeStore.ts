@@ -484,7 +484,22 @@ export const useUrgeStore = defineStore(
     }
 
     const deleteTask = (id: string) => {
+      // 删除任务
       tasks.value = tasks.value.filter((task) => task.id !== id)
+
+      // 同时删除与该任务关联的冲动记录
+      urgeLogs.value = urgeLogs.value.filter((log) => log.taskId !== id)
+
+      // 同时删除与该任务关联的打卡记录
+      checkInRecords.value = checkInRecords.value.filter((record) => record.taskId !== id)
+    }
+
+    const deleteUrgeLog = (id: string) => {
+      urgeLogs.value = urgeLogs.value.filter((log) => log.id !== id)
+    }
+
+    const deleteCheckInRecord = (id: string) => {
+      checkInRecords.value = checkInRecords.value.filter((record) => record.id !== id)
     }
 
     return {
@@ -535,7 +550,9 @@ export const useUrgeStore = defineStore(
       calculateTaskStatus,
       checkIn,
       getTaskStreak,
-      getTaskDayStatus
+      getTaskDayStatus,
+      deleteUrgeLog,
+      deleteCheckInRecord
     }
   },
   {

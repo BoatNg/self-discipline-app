@@ -76,6 +76,8 @@ const options = [
   { id: 'pre_subway', text: '上地铁前' },
   { id: 'post_subway', text: '下地铁后' },
   { id: 'gathering', text: '聚餐' },
+  { id: 'pre_meal', text: '吃饭前' },
+  { id: 'post_meal', text: '吃饱后' }, // 俗称“饭后烟”或“饭后困”的时间点
 
   // --- 身体与工作状态 ---
   { id: 'post_work', text: '高强度工作后' },
@@ -84,6 +86,7 @@ const options = [
   { id: 'alcohol', text: '喝酒了' },
 
   // --- 心理与情绪触发 ---
+  { id: 'achievement', text: '获得成就/解决难题后' }, // 新增
   { id: 'stressed', text: '压力大' },
   { id: 'troubled', text: '有烦恼' },
   { id: 'guilty', text: '愧疚' },

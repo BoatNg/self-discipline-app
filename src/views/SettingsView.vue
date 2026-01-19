@@ -36,7 +36,7 @@
               </div>
 
               <button
-                @click="store.deleteTask(task.id)"
+                @click="showTaskDeleteConfirm(task.id, task.name)"
                 class="text-calm-400 hover:text-red-500 transition-colors"
               >
                 ✕
@@ -101,7 +101,7 @@
               </div>
 
               <button
-                @click="store.deleteTask(task.id)"
+                @click="showTaskDeleteConfirm(task.id, task.name)"
                 class="text-calm-400 hover:text-red-500 transition-colors"
               >
                 ✕
@@ -290,6 +290,29 @@
     </div>
   </div>
 
+  <!-- 任务删除确认弹窗 -->
+  <div
+    v-if="showTaskDeleteConfirmModal"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+    @click.self="cancelTaskDelete"
+  >
+    <div class="bg-white rounded-2xl p-6 w-full max-w-md">
+      <div class="text-6xl text-red-500 mb-4 text-center">⚠️</div>
+      <h3 class="text-lg font-medium text-calm-800 mb-2 text-center">确认删除任务</h3>
+      <p class="text-calm-600 text-center mb-4">「{{ taskToDelete?.name }}」</p>
+      <p class="text-calm-600 text-center mb-6">
+        这将删除该任务以及所有关联的冲动记录和打卡记录，无法恢复。确定继续吗？
+      </p>
+
+      <div class="flex space-x-3">
+        <button @click="cancelTaskDelete" class="btn-secondary flex-1">取消</button>
+        <button @click="confirmTaskDelete" class="btn-primary flex-1 bg-red-500 hover:bg-red-600">
+          确认删除
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- 通知容器 -->
   <NotificationContainer :notifications="notifications" @remove="removeNotification" />
 </template>
@@ -319,6 +342,10 @@ const syncLoading = ref(false)
 const lastSyncTime = ref<number | null>(null)
 const pendingUploadData = ref<any>(null)
 
+// 任务删除相关状态
+const showTaskDeleteConfirmModal = ref(false)
+const taskToDelete = ref<{ id: string; name: string } | null>(null)
+
 // 计算属性：筛选不同类型的任务
 const dontWantTasks = computed(() => {
   return store.tasks.filter((task) => task.type === 'DONT_WANT')
@@ -341,6 +368,25 @@ const confirmClearData = () => {
   store.urgeLogs = []
   store.checkInRecords = []
   showConfirmClear.value = false
+}
+
+// 任务删除相关方法
+const showTaskDeleteConfirm = (taskId: string, taskName: string) => {
+  taskToDelete.value = { id: taskId, name: taskName }
+  showTaskDeleteConfirmModal.value = true
+}
+
+const confirmTaskDelete = () => {
+  if (taskToDelete.value) {
+    store.deleteTask(taskToDelete.value.id)
+    showTaskDeleteConfirmModal.value = false
+    taskToDelete.value = null
+  }
+}
+
+const cancelTaskDelete = () => {
+  showTaskDeleteConfirmModal.value = false
+  taskToDelete.value = null
 }
 
 const formatTaskPeriod = (task: Task) => {

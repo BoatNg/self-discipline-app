@@ -42,7 +42,7 @@
             <div class="font-medium text-calm-800">
               {{ formatDate(log.timestamp) }}
             </div>
-            <div class="text-sm text-calm-500 mt-1">
+            <div class="text-sm text-calm-500 mt-1" style="max-width: 200px">
               {{ getInterventionText(log.assignedIntervention) }}
               {{
                 log.cognitiveTag
@@ -58,7 +58,7 @@
             </div>
           </div>
 
-          <div class="flex items-center">
+          <div class="flex items-center space-x-2">
             <div
               :class="{
                 'bg-green-100 text-green-800': log.isCompleted && log.outcome === 'resisted',
@@ -70,6 +70,13 @@
             >
               {{ getOutcomeText(log.isCompleted, log.outcome) }}
             </div>
+            <button
+              @click="deleteUrgeLog(log.id)"
+              class="text-calm-400 hover:text-red-500 transition-colors"
+              title="删除记录"
+            >
+              ✕
+            </button>
           </div>
         </div>
       </div>
@@ -101,7 +108,7 @@
             </div>
           </div>
 
-          <div class="flex items-center">
+          <div class="flex items-center space-x-2">
             <div
               :class="{
                 'bg-green-100 text-green-800': record.isCompleted,
@@ -111,6 +118,13 @@
             >
               {{ record.isCompleted ? '成功' : '失败' }}
             </div>
+            <!-- <button
+              @click="deleteCheckInRecord(record.id)"
+              class="text-calm-400 hover:text-red-500 transition-colors"
+              title="删除记录"
+            >
+              ✕
+            </button> -->
           </div>
         </div>
       </div>
@@ -189,4 +203,12 @@ const getCheckInStatusText = (isCompleted: boolean) => {
 const sortedCheckInRecords = computed(() => {
   return [...store.checkInRecords].sort((a, b) => b.timestamp - a.timestamp)
 })
+
+const deleteUrgeLog = (id: string) => {
+  store.deleteUrgeLog(id)
+}
+
+const deleteCheckInRecord = (id: string) => {
+  store.deleteCheckInRecord(id)
+}
 </script>
