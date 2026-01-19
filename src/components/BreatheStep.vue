@@ -121,7 +121,8 @@ const startBreathing = () => {
   const phases = [
     { name: '吸气', duration: 4000 },
     { name: '屏息', duration: 4000 },
-    { name: '呼气', duration: 4000 }
+    { name: '呼气', duration: 4000 },
+    { name: '屏息', duration: 4000 },
   ]
 
   let currentPhaseIndex = 0
@@ -169,7 +170,7 @@ const startBreathing = () => {
     // 标记干预完成
     store.markInterventionCompleted()
     isCompleted.value = true
-  }, 60000)
+  }, 64000)
 }
 
 // 跳转到结果页面
