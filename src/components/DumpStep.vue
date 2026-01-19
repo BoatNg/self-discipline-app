@@ -1,13 +1,13 @@
 <template>
-  <div class="flex flex-col items-center justify-center min-h-[calc(100vh-160px)] safe-insets">
+  <div class="flex flex-col items-center  min-h-[calc(100vh-160px)] " >
     <!-- 页面标题 -->
-    <div class="mb-8 text-center">
+    <div class="mb-4  text-center" >
       <h2 class="text-2xl font-medium text-calm-800 mb-4">这一刻，最接近的是哪种感觉？</h2>
       <p class="text-calm-600">选择最接近你此刻感受的选项</p>
     </div>
 
     <!-- 选择选项 -->
-    <div class="w-full max-w-md space-y-3 mb-8" style="max-height: 50vh; overflow-y: scroll; padding: 20px 10px; border: 1px solid #e5e7eb;">
+    <div class="w-full max-w-md space-y-3 mb-2" style="max-height: 50vh; overflow-y: scroll; padding: 20px 10px; border: 1px solid #e5e7eb; border-radius: 10px;">
       <button
         v-for="option in options"
         :key="option.id"
@@ -35,10 +35,10 @@
     </div>
 
     <!-- 提示文字 -->
-    <div class="mt-8 mb-4 max-w-sm text-center text-calm-500">
+    <div class=" mb-4 max-w-sm text-center text-calm-500">
       <p class="mb-2">🧠 认知卸载 <span class="text-sm">({{ selectedTextsRef.length }})</span></p>
-      <p class="text-sm">可以选择多个描述你此刻的感受</p>
       <p class="text-sm truncate text-green-600" v-if="selectedTextsRef.length > 0" >{{ selectedTextsRef.join(" | ") }}</p>
+      <p class="text-sm" v-else>可以选择多个描述你此刻的感受</p>
     </div>
 
     <!-- 完成按钮（选择选项后显示） -->

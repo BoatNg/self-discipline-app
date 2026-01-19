@@ -1,17 +1,18 @@
 <template>
   <div class="flex flex-col min-h-[calc(100vh-60px)] safe-insets">
     <!-- 退出按钮 -->
-    <div class="flex justify-start mb-6">
+    <div class="flex justify-start">
       <button
         @click="cancelIntervention"
         class="text-calm-500 hover:text-calm-700 transition-colors p-2"
+        style="font-size: 2rem;"
       >
         ✕
       </button>
     </div>
 
     <!-- 干预选择界面 -->
-    <div v-if="showSelection" class="flex-1 flex flex-col items-center justify-center">
+    <div v-if="showSelection" class="flex-1 flex flex-col items-center ">
       <div class="mb-8 text-center">
         <h2 class="text-2xl font-medium text-calm-800 mb-4">选一个干预方式</h2>
         <p class="text-calm-600">选择一个你希望尝试的干预方式</p>
@@ -89,7 +90,7 @@ const interventions = ref([
   {
     type: 'BREATHE' as InterventionType,
     title: '呼吸',
-    description: '跟着呼吸节奏，平静内心',
+    description: '跟着呼吸节奏，平静内心。吐气，准备开始',
     icon: '🌬️'
   },
   {

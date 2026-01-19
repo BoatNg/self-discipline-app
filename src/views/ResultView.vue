@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-center min-h-[calc(100vh-120px)] safe-insets">
+  <div class="flex flex-col items-center justify-center min-h-[calc(100vh-120px)]">
     <div class="mb-8 text-center">
       <h2 class="text-2xl font-medium text-calm-800 mb-4">最后一步</h2>
       <p class="text-calm-600">选择最符合你当前状态的结果</p>

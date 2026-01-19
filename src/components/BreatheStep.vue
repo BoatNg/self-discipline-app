@@ -1,25 +1,25 @@
 <template>
   <div
-    class="flex flex-col items-center justify-center min-h-[calc(100vh-140px)] px-4 py-6 safe-insets"
+    class="flex flex-col items-center  min-h-[calc(100vh-140px)] px-4 "
   >
     <!-- 标题区域 -->
-    <div class="mb-8 text-center">
+    <div class="mb-6 text-center">
       <h2 class="text-2xl font-semibold text-calm-800 mb-2 tracking-wide">跟着呼吸</h2>
       <p class="text-calm-500">专注当下，感受呼吸节奏</p>
     </div>
 
     <!-- 呼吸阶段显示 -->
-    <div class="relative w-full max-w-md mb-8">
+    <div class="relative w-full max-w-md">
       <!-- 背景装饰 -->
       <div
         class="absolute inset-0 bg-gradient-to-br from-calm-50 to-primary-50 rounded-3xl -z-10 opacity-60"
       ></div>
 
       <!-- 阶段显示 -->
-      <div class="text-center py-10 px-6">
+      <div class="text-center py-2 px-6">
         <!-- Emoji显示 - 使用快速过渡 -->
         <transition name="emoji-fade" mode="out-in">
-          <div v-if="!isCompleted" :key="currentEmoji" class="text-8xl mb-6 animate-emoji-pulse">
+          <div v-if="!isCompleted"  class="text-8xl mb-6 animate-emoji-pulse">
             {{ currentEmoji }}
           </div>
           <div v-else :key="'complete'" class="text-8xl mb-6">✨</div>
@@ -69,7 +69,7 @@
     </div>
 
     <!-- 提示文字 - 更靠近主内容 -->
-    <div class="mt-4 mb-6 max-w-md text-center px-4">
+    <div class=" mb-6 max-w-md text-center px-4">
       <div class="bg-calm-50/80 backdrop-blur-sm rounded-2xl p-6 shadow-sm hover-scale">
         <p class="text-lg text-calm-700 font-medium mb-3">🌬️ 专注当下</p>
         <p class="text-calm-500 leading-relaxed">观察呼吸的自然节奏，让注意力停留在此时此刻。</p>
@@ -113,7 +113,7 @@ const emojiMap = {
 }
 
 const currentEmoji = computed(() => {
-  return emojiMap[breathePhase.value as keyof typeof emojiMap] || ''
+  return emojiMap[breathePhase.value as keyof typeof emojiMap] || '💖'
 })
 
 const startBreathing = () => {

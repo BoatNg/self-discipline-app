@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-center min-h-[calc(100vh-160px)] safe-insets">
+  <div class="flex flex-col items-center  min-h-[calc(100vh-160px)]">
     <div class="mb-8 text-center">
       <h2 class="text-2xl font-medium text-calm-800 mb-4">我们一起等 3 分钟</h2>
       <p class="text-calm-600">什么都不用做，看着时间过去就好</p>

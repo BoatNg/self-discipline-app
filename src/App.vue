@@ -47,7 +47,7 @@ const route = useRoute()
 const store = useUrgeStore()
 
 const currentTitle = computed(() => {
-  return (route.meta.title as string) || '我不要'
+  return (route.meta.title as string) || '慢一点'
 })
 
 const showHeader = computed(() => {
