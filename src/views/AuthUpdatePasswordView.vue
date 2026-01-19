@@ -1,5 +1,5 @@
 <template>
-  <div class="auth-update-password min-h-screen bg-calm-50 flex flex-col">
+  <div class="auth-update-password bg-calm-50 flex flex-col" style="min-height: 80vh">
     <div class="container max-w-md mx-auto px-4 py-8 flex-grow flex flex-col">
       <div class="mb-8 text-center">
         <h1 class="text-2xl font-semibold text-calm-800 mb-2">重置密码</h1>

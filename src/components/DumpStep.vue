@@ -7,7 +7,7 @@
     </div>
 
     <!-- 选择选项 -->
-    <div class="w-full max-w-md space-y-3 mb-8">
+    <div class="w-full max-w-md space-y-3 mb-8" style="max-height: 50vh; overflow-y: scroll; padding: 20px 10px; border: 1px solid #e5e7eb;">
       <button
         v-for="option in options"
         :key="option.id"
@@ -36,8 +36,9 @@
 
     <!-- 提示文字 -->
     <div class="mt-8 mb-4 max-w-sm text-center text-calm-500">
-      <p class="mb-2">🧠 认知卸载</p>
+      <p class="mb-2">🧠 认知卸载 <span class="text-sm">({{ selectedTextsRef.length }})</span></p>
       <p class="text-sm">可以选择多个描述你此刻的感受</p>
+      <p class="text-sm truncate text-green-600" v-if="selectedTextsRef.length > 0" >{{ selectedTextsRef.join(" | ") }}</p>
     </div>
 
     <!-- 完成按钮（选择选项后显示） -->
@@ -65,14 +66,36 @@ const store = useUrgeStore()
 // 从父组件注入的方法
 const getRouteParams = inject<() => any>('getRouteParams')
 const selectedOptions = ref<string[]>([])
+const selectedTextsRef = ref<string[]>([])
 
 const options = [
-  { id: 'annoyed', text: '有点烦 / 有点撑不住' },
-  { id: 'urge', text: '很想立刻做点什么' },
-  { id: 'racing', text: '脑子停不下来' },
-  { id: 'emotional', text: '情绪上来了' },
-  { id: 'unknown', text: '说不清楚' }
+  // --- 特定时间与场景 ---
+  { id: 'late_night', text: '深夜' }, // 新增
+  { id: 'morning', text: '早上起来' },
+  { id: 'toilet', text: '上厕所' },
+  { id: 'pre_subway', text: '上地铁前' },
+  { id: 'post_subway', text: '下地铁后' },
+  { id: 'gathering', text: '聚餐' },
+
+  // --- 身体与工作状态 ---
+  { id: 'post_work', text: '高强度工作后' },
+  { id: 'fatigued', text: '身体疲劳' },
+  { id: 'post_exercise', text: '运动后' },
+  { id: 'alcohol', text: '喝酒了' },
+
+  // --- 心理与情绪触发 ---
+  { id: 'stressed', text: '压力大' },
+  { id: 'troubled', text: '有烦恼' },
+  { id: 'guilty', text: '愧疚' },
+  { id: 'emotional', text: '情绪上来' },
+
+  // --- 外部触发与心理暗示 ---
+  { id: 'specific_place', text: '路过特定的地点' },
+  { id: 'specific_people', text: '遇到某些人' },
+  { id: 'procrastination', text: '特许许可，“明天再说”、“下午再说”...' }
 ]
+
+
 
 const toggleOption = (optionId: string) => {
   const index = selectedOptions.value.indexOf(optionId)
@@ -89,7 +112,9 @@ const toggleOption = (optionId: string) => {
   const selectedTexts = selectedOptions.value
     .map((id) => options.find((opt) => opt.id === id)?.text || id)
     .filter(Boolean)
-  store.setCognitiveTag(selectedTexts.join(', '))
+
+  selectedTextsRef.value = selectedTexts
+  store.setCognitiveTag(selectedTexts.join('|'))
 }
 
 // 跳转到结果页面

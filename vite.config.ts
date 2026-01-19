@@ -4,14 +4,18 @@ import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 import { VueMcp } from 'vite-plugin-vue-mcp'
 // import vueDevTools from 'vite-plugin-vue-devtools'
+import basicSsl from '@vitejs/plugin-basic-ssl'
 
 export default defineConfig({
   server: {
     port: 13348,        // 指定端口
     strictPort: true,  // 如果端口被占用，直接报错（不自动换端口）
-    host: 'localhost', // 可选，默认是 localhost
+    host: '0.0.0.0', // 可选，默认是 localhost
+    cors: true, // 开启 CORS，允许跨域请求
+    https: true
   },
   plugins: [
+    basicSsl(),
     vue(),
     VitePWA({
       registerType: 'autoUpdate',
@@ -22,9 +26,9 @@ export default defineConfig({
         'README-icons.txt'
       ],
       manifest: {
-        name: '我不要 - 冲动管理工具',
-        short_name: '我不要',
-        description: '在冲动发生时提供最低成本、最有效的干预',
+        name: '这一刻本身，就值得被记录',
+        short_name: '慢一点',
+        description: '不是成功才值得被记录。在「慢一点」，每一次停下来，都是有效的',
         lang: 'zh-CN',
         dir: 'ltr',
         theme_color: '#4ade80',
@@ -140,7 +144,7 @@ export default defineConfig({
       }
     }),
     // vueDevTools(),
-    VueMcp()
+    // VueMcp()
   ],
   resolve: {
     alias: {

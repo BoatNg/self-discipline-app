@@ -1,11 +1,11 @@
 <template>
-  <div class="min-h-screen bg-calm-50">
+  <div class="min-h-screen bg-calm-50" style="overscroll-behavior: none;">
     <header v-if="showHeader" class="sticky top-0 z-10 bg-white shadow-sm safe-top">
       <div class="container mx-auto px-4 py-3">
         <h1 class="text-xl font-semibold text-calm-800">{{ currentTitle }}</h1>
       </div>
     </header>
-
+    <div style="padding-top: 0.8rem"></div>
     <main
       class="container mx-auto px-4 safe-bottom"
       :class="{
@@ -18,9 +18,9 @@
 
     <nav
       v-if="showNavigation"
-      class="fixed bottom-0 left-0 right-0 bg-white border-t border-calm-200 navigation-safe nav-height-safe ios-nav-safe"
+      class="fixed bottom-0 left-0 right-0 bg-white border-t border-calm-200 navigation-safe nav-height-safe"
     >
-      <div class="flex justify-around items-center safe-bottom nav-content-safe">
+      <div class="flex justify-around items-center">
         <router-link
           v-for="item in navigationItems"
           :key="item.to"
@@ -32,7 +32,7 @@
           <span class="text-xs">{{ item.label }}</span>
         </router-link>
       </div>
-    </nav>
+    </nav >
     <PWAStatus />
   </div>
 </template>
