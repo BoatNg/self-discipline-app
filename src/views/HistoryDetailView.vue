@@ -208,7 +208,7 @@ const deleteUrgeLog = (id: string) => {
   store.deleteUrgeLog(id)
 }
 
-const deleteCheckInRecord = (id: string) => {
-  store.deleteCheckInRecord(id)
-}
+// const deleteCheckInRecord = (id: string) => {
+//   store.deleteCheckInRecord(id)
+// }
 </script>
