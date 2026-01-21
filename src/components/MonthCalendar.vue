@@ -82,7 +82,7 @@
         <!-- 任务状态列表（移动端优化） -->
         <template v-if="day.isCurrentMonth">
           <div v-if="day.taskStatusDetails.length > 0" class="flex-1 overflow-y-auto max-h-14">
-            <div class="flex flex-col items-center justify-center py-1 space-y-1">
+            <div class="flex flex-wrap items-center justify-center  gap-1 ">
               <div
                 v-for="taskDetail in day.taskStatusDetails"
                 :key="taskDetail.taskId"
