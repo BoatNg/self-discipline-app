@@ -96,7 +96,10 @@ const options = [
   // --- 外部触发与心理暗示 ---
   { id: 'specific_place', text: '路过特定的地点' },
   { id: 'specific_people', text: '遇到某些人' },
-  { id: 'procrastination', text: '特许许可，“明天再说”、“下午再说”...' }
+  { id: 'procrastination', text: '特许许可，“明天再说”、“下午再说”...' },
+
+  // --- 其他 ---
+  { id: 'other', text: '其他' }
 ]
 
 
