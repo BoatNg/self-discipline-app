@@ -90,8 +90,8 @@
     <div class="mt-6 text-sm text-calm-500">
       <p>连续天数计算规则：</p>
       <ul class="list-disc list-inside mt-1 space-y-1">
-        <li><span class="font-medium">【我想要】任务</span>：当天成功打卡记为成功日</li>
-        <li><span class="font-medium">【我不要】任务</span>：当天无失败记录记为成功日</li>
+        <li><span class="font-medium">【修】任务</span>：当天成功打卡记为成功日</li>
+        <li><span class="font-medium">【克】任务</span>：当天无失败记录记为成功日</li>
         <li>遇到失败日时连续天数重新计算</li>
         <li>未知状态不会中断连续天数</li>
       </ul>
@@ -113,7 +113,7 @@ defineEmits<{
 }>()
 
 const getTaskTypeLabel = (type: string) => {
-  return type === 'DONT_WANT' ? '我不要' : '我想要'
+  return type === 'DONT_WANT' ? '克' : '修'
 }
 
 const getStreakBadgeClass = (streakDays: number) => {

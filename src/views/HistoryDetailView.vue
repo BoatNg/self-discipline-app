@@ -87,7 +87,7 @@
       <div v-if="store.checkInRecords.length === 0" class="text-center py-12">
         <div class="text-6xl mb-4">📅</div>
         <p class="text-calm-500">还没有打卡记录</p>
-        <p class="text-calm-400 text-sm mt-2">创建"我想要"任务并开始打卡</p>
+        <p class="text-calm-400 text-sm mt-2">创建"修"任务并开始打卡</p>
       </div>
 
       <div v-else class="space-y-3">
@@ -162,7 +162,8 @@ const getInterventionText = (type: InterventionType | null) => {
   const interventionMap: Record<InterventionType, string> = {
     TIMER: '⏰ 3分钟等待',
     BREATHE: '🌬️ 呼吸练习',
-    DUMP: '🧠 认知卸载'
+    DUMP: '🧠 认知卸载',
+    EMOTION: '🎭 情绪标定'
   }
   return interventionMap[type]
 }

@@ -161,7 +161,7 @@ const formatDateDisplay = (date: Date) => {
 }
 
 const getTaskTypeLabel = (type: TaskType) => {
-  return type === 'DONT_WANT' ? '我不要' : '我想要'
+  return type === 'DONT_WANT' ? '克' : '修'
 }
 
 const getStatusIcon = (status: string) => {

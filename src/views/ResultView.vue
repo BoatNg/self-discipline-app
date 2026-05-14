@@ -74,12 +74,12 @@
           @click="showTaskSelection = true"
           class="btn-secondary w-full text-primary-600 border-primary-200 hover:bg-primary-50"
         >
-          {{ selectedTaskId ? '重新选择' : '选择「我不要」任务' }}
+          {{ selectedTaskId ? '重新选择' : '选择「克」任务' }}
         </button>
 
         <!-- 如果没有"我不要"任务，显示添加任务按钮 -->
         <div v-if="store.tasks.filter((t) => t.type === 'DONT_WANT').length === 0" class="mt-3">
-          <p class="text-calm-500 text-sm mb-2">还没有「我不要」类型的任务</p>
+          <p class="text-calm-500 text-sm mb-2">还没有「克」类型的任务</p>
           <button
             @click="showAddTask = true"
             class="btn-secondary w-full text-green-600 border-green-200 hover:bg-green-50"

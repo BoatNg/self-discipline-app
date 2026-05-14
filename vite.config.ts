@@ -27,8 +27,8 @@ export default defineConfig({
       ],
       manifest: {
         name: '这一刻本身，就值得被记录',
-        short_name: '慢一点',
-        description: '不是成功才值得被记录。在「慢一点」，每一次停下来，都是有效的',
+        short_name: '一念',
+        description: '不是成功才值得被记录。在「一念」，每一次停下来，都是有效的',
         lang: 'zh-CN',
         dir: 'ltr',
         theme_color: '#4ade80',

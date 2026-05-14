@@ -1,8 +1,10 @@
-export type InterventionType = 'TIMER' | 'BREATHE' | 'DUMP'
+export type InterventionType = 'TIMER' | 'BREATHE' | 'DUMP' | 'EMOTION'
+
+export type EmotionIntensity = 'high' | 'medium' | 'low'
 export type Outcome = 'resisted' | 'relapsed' | null
 
 // 新增：任务类型枚举
-export type TaskType = 'DONT_WANT' | 'DO_WANT' // "我不要" | "我想要"
+export type TaskType = 'DONT_WANT' | 'DO_WANT' // "克" | "修"
 
 // 新增：打卡周期类型
 export type PeriodType = 'DAILY' | 'WEEKLY' | 'CUSTOM'
@@ -18,6 +20,8 @@ export interface UrgeLog {
   outcome: Outcome
   triggerReason?: string
   cognitiveTag?: string // 认知卸载时选择的标签
+  emotionTag?: string // 情绪标定时选择的标签
+  emotionIntensity?: EmotionIntensity // 情绪强度
   taskId?: string // 关联的任务ID
 }
 

@@ -72,7 +72,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, _, next) => {
-  document.title = to.meta.title ? `${to.meta.title} - 我不要` : '我不要'
+  document.title = to.meta.title ? `${to.meta.title} - 一念` : '一念'
 
   if (to.meta.requiresIntervention) {
     const store = useUrgeStore()

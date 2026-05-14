@@ -72,6 +72,7 @@ import { useUrgeStore } from '@/stores/useUrgeStore'
 import TimerStep from '@/components/TimerStep.vue'
 import BreatheStep from '@/components/BreatheStep.vue'
 import DumpStep from '@/components/DumpStep.vue'
+import EmotionStep from '@/components/EmotionStep.vue'
 import type { InterventionType } from '@/types'
 
 const router = useRouter()
@@ -98,6 +99,12 @@ const interventions = ref([
     title: '倾诉',
     description: '把此刻感受写下来',
     icon: '💬'
+  },
+  {
+    type: 'EMOTION' as InterventionType,
+    title: '情绪标定',
+    description: '识别并标记此刻的负面情绪',
+    icon: '🎭'
   }
 ])
 
@@ -155,13 +162,14 @@ const selectIntervention = (type: InterventionType) => {
   const componentMap = {
     TIMER: TimerStep,
     BREATHE: BreatheStep,
-    DUMP: DumpStep
+    DUMP: DumpStep,
+    EMOTION: EmotionStep
   }
   currentComponent.value = componentMap[type]
 }
 
 const selectRandom = () => {
-  const interventionTypes: InterventionType[] = ['TIMER', 'BREATHE', 'DUMP']
+  const interventionTypes: InterventionType[] = ['TIMER', 'BREATHE', 'DUMP', 'EMOTION']
   const randomType = interventionTypes[Math.floor(Math.random() * interventionTypes.length)]
   selectIntervention(randomType)
 }

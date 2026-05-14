@@ -38,16 +38,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useUrgeStore } from '@/stores/useUrgeStore'
 import PWAStatus from '@/components/PWAStatus.vue'
+import { useKeepAlive } from '@/composables/useKeepAlive'
 
 const route = useRoute()
 const store = useUrgeStore()
+const { start, stop } = useKeepAlive()
+
+onMounted(start)
+onUnmounted(stop)
 
 const currentTitle = computed(() => {
-  return (route.meta.title as string) || '慢一点'
+  return (route.meta.title as string) || '一念'
 })
 
 const showHeader = computed(() => {

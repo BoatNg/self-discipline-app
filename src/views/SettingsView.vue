@@ -13,9 +13,9 @@
         <p class="text-calm-400 text-sm mt-2">点击上方按钮添加第一个任务</p>
       </div>
 
-      <!-- "我不要"任务 -->
+      <!-- "克"任务 -->
       <div v-if="dontWantTasks.length > 0" class="mb-6">
-        <h3 class="text-lg font-medium text-calm-700 mb-3">「我不要」任务</h3>
+        <h3 class="text-lg font-medium text-calm-700 mb-3">「克」任务</h3>
         <div class="space-y-3">
           <div v-for="task in dontWantTasks" :key="task.id" class="card">
             <div class="flex items-center justify-between mb-2">
@@ -78,9 +78,9 @@
         </div>
       </div>
 
-      <!-- "我想要"任务 -->
+      <!-- "修"任务 -->
       <div v-if="doWantTasks.length > 0" class="mb-6">
-        <h3 class="text-lg font-medium text-calm-700 mb-3">「我想要」任务</h3>
+        <h3 class="text-lg font-medium text-calm-700 mb-3">「修」任务</h3>
         <div class="space-y-3">
           <div v-for="task in doWantTasks" :key="task.id" class="card">
             <div class="flex items-center justify-between mb-2">
@@ -231,7 +231,7 @@
       <div class="text-calm-600 text-sm space-y-2">
         <p>版本: 1.3.0</p>
         <p>这是一个本地运行的PWA应用，所有数据都保存在您的设备上。</p>
-        <p class="text-xs text-calm-400 mt-4">「我不要」- 冲动管理工具</p>
+        <p class="text-xs text-calm-400 mt-4">「一念」- 冲动管理工具</p>
       </div>
     </div>
 

@@ -10,7 +10,8 @@ import type {
   PeriodType,
   TaskStatus,
   CheckInRecord,
-  DumpOption
+  DumpOption,
+  EmotionIntensity
 } from '@/types'
 
 // 默认倾诉选项（从 DumpStep.vue 硬编码中提取）
@@ -28,15 +29,17 @@ const DEFAULT_DUMP_OPTIONS: DumpOption[] = [
   { id: '11', text: '运动后' },
   { id: '12', text: '喝酒了' },
   { id: '13', text: '获得成就/解决难题后' },
+  { id: '13-1', text: '正在进行复杂工作/任务' },
   { id: '14', text: '决定或行动前' },
   { id: '15', text: '压力大' },
   { id: '16', text: '有烦恼' },
-  { id: '17', text: '愧疚' },
-  { id: '18', text: '情绪上来' },
+  // { id: '17', text: '愧疚' },
+  // { id: '18', text: '情绪上来' },
   { id: '19', text: '路过特定的地点' },
   { id: '20', text: '遇到某些人' },
   { id: '21', text: '特许许可，"明天再说"、"下午再说"...' },
-  { id: '22', text: '其他' }
+
+  
 ]
 import {
   generateCalendarData,
@@ -494,6 +497,18 @@ export const useUrgeStore = defineStore(
       }
     }
 
+    const setEmotionTag = (tag: string) => {
+      if (urgeLogs.value.length > 0) {
+        urgeLogs.value[0].emotionTag = tag
+      }
+    }
+
+    const setEmotionIntensity = (intensity: EmotionIntensity) => {
+      if (urgeLogs.value.length > 0) {
+        urgeLogs.value[0].emotionIntensity = intensity
+      }
+    }
+
     const completeIntervention = (outcome: Outcome, taskId?: string) => {
       if (urgeLogs.value.length > 0) {
         urgeLogs.value[0].outcome = outcome
@@ -592,6 +607,8 @@ export const useUrgeStore = defineStore(
       markInterventionCompleted,
       setTriggerReason,
       setCognitiveTag,
+      setEmotionTag,
+      setEmotionIntensity,
       completeIntervention,
       cancelIntervention,
       deleteTask,

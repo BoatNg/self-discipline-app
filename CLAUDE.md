@@ -19,7 +19,7 @@ No separate vitest config file — vitest reads from `vite.config.ts`.
 
 ## Architecture
 
-Vue 3 + TypeScript PWA for impulse/urge management ("慢一点"). Mobile-first, Chinese UI.
+Vue 3 + TypeScript PWA for impulse/urge management ("一念"). Mobile-first, Chinese UI.
 
 **Stack:** Vue 3 (Composition API + `<script setup>`), Pinia (persisted to localStorage), Vue Router, Tailwind CSS, Vite, Supabase (auth + cloud backup).
 
@@ -32,8 +32,8 @@ Vue 3 + TypeScript PWA for impulse/urge management ("慢一点"). Mobile-first, 
 - `src/utils/` — Pure logic: streak calculation, week/month calendar generation, time state helpers.
 
 **Two task types:**
-- `DONT_WANT` ("我不要") — urge resistance tasks. User triggers intervention flow when impulse hits.
-- `DO_WANT` ("我想要") — daily check-in tasks with start/end dates.
+- `DONT_WANT` ("克") — urge resistance tasks. User triggers intervention flow when impulse hits.
+- `DO_WANT` ("修") — daily check-in tasks with start/end dates.
 
 **Intervention flow:** Home → `/intervention` (select TIMER/BREATHE/DUMP) → component runs → `/result` (record outcome). Route guard requires `isInIntervention` state.
 

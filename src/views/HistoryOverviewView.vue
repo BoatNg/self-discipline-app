@@ -27,9 +27,9 @@
     <div v-else-if="isEmpty" class="card text-center py-16">
       <div class="text-8xl mb-6">📊</div>
       <h2 class="text-xl font-bold text-calm-800 mb-3">还没有任务记录</h2>
-      <p class="text-calm-500 mb-6 max-w-md mx-auto">
-        创建"我想要"或"我不要"任务，开始你的自律之旅吧
-      </p>
+        <p class="text-calm-500 mb-6 max-w-md mx-auto">
+          创建"修"或"克"任务，开始你的自律之旅吧
+        </p>
       <div class="flex justify-center gap-4">
         <router-link
           to="/task/create"
@@ -87,8 +87,8 @@
       <div class="text-sm text-calm-500">
         <p class="mb-2">连续天数计算说明：</p>
         <ul class="list-disc list-inside space-y-1">
-          <li><strong>【我想要】任务</strong>：当天成功打卡记为成功日</li>
-          <li><strong>【我不要】任务</strong>：当天无失败记录记为成功日</li>
+          <li><strong>【修】任务</strong>：当天成功打卡记为成功日</li>
+          <li><strong>【克】任务</strong>：当天无失败记录记为成功日</li>
           <li>遇到失败日时连续天数重新计算</li>
           <li>未知状态（无记录）不会中断连续天数</li>
           <li>连续天数用于鼓励坚持，而非制造压力</li>

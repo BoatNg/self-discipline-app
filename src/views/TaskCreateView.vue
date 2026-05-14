@@ -30,7 +30,7 @@
               class="p-4 rounded-xl border-2 text-center transition-all duration-200"
             >
               <div class="text-2xl mb-2">💪</div>
-              <div class="font-medium">我想要</div>
+              <div class="font-medium">修</div>
               <div class="text-xs text-calm-500 mt-1">目标打卡</div>
             </button>
 
@@ -44,7 +44,7 @@
               class="p-4 rounded-xl border-2 text-center transition-all duration-200"
             >
               <div class="text-2xl mb-2">🚫</div>
-              <div class="font-medium">我不要</div>
+              <div class="font-medium">克</div>
               <div class="text-xs text-calm-500 mt-1">冲动控制</div>
             </button>
           </div>

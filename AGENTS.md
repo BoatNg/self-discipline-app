@@ -1,6 +1,6 @@
 # AGENTS.md
 
-**慢一点 (Slow Down)** — Chinese-language Vue 3 PWA for impulse management.
+**一念 (Slow Down)** — Chinese-language Vue 3 PWA for impulse management.
 
 ## Stack
 
