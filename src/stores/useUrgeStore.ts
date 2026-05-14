@@ -9,8 +9,35 @@ import type {
   TaskType,
   PeriodType,
   TaskStatus,
-  CheckInRecord
+  CheckInRecord,
+  DumpOption
 } from '@/types'
+
+// 默认倾诉选项（从 DumpStep.vue 硬编码中提取）
+const DEFAULT_DUMP_OPTIONS: DumpOption[] = [
+  { id: '1', text: '深夜' },
+  { id: '2', text: '早上起来' },
+  { id: '3', text: '上厕所' },
+  { id: '4', text: '上地铁前' },
+  { id: '5', text: '下地铁后' },
+  { id: '6', text: '聚餐' },
+  { id: '7', text: '吃饭前' },
+  { id: '8', text: '吃饱后' },
+  { id: '9', text: '高强度工作后' },
+  { id: '10', text: '身体疲劳' },
+  { id: '11', text: '运动后' },
+  { id: '12', text: '喝酒了' },
+  { id: '13', text: '获得成就/解决难题后' },
+  { id: '14', text: '决定或行动前' },
+  { id: '15', text: '压力大' },
+  { id: '16', text: '有烦恼' },
+  { id: '17', text: '愧疚' },
+  { id: '18', text: '情绪上来' },
+  { id: '19', text: '路过特定的地点' },
+  { id: '20', text: '遇到某些人' },
+  { id: '21', text: '特许许可，"明天再说"、"下午再说"...' },
+  { id: '22', text: '其他' }
+]
 import {
   generateCalendarData,
   getTaskProgresses,
@@ -37,6 +64,7 @@ export const useUrgeStore = defineStore(
 
     const urgeLogs = ref<UrgeLog[]>([])
     const checkInRecords = ref<CheckInRecord[]>([]) // 新增：打卡记录
+    const dumpOptions = ref<DumpOption[]>([...DEFAULT_DUMP_OPTIONS]) // 倾诉选项
 
     const currentInterventionType = ref<InterventionType | null>(null)
     const isInIntervention = ref(false)
@@ -502,10 +530,36 @@ export const useUrgeStore = defineStore(
       checkInRecords.value = checkInRecords.value.filter((record) => record.id !== id)
     }
 
+    // 倾诉选项管理
+    const addDumpOption = (text: string) => {
+      const newOption: DumpOption = {
+        id: Date.now().toString(),
+        text
+      }
+      dumpOptions.value.push(newOption)
+      return newOption
+    }
+
+    const editDumpOption = (id: string, text: string) => {
+      const option = dumpOptions.value.find((o) => o.id === id)
+      if (option) {
+        option.text = text
+      }
+    }
+
+    const deleteDumpOption = (id: string) => {
+      dumpOptions.value = dumpOptions.value.filter((o) => o.id !== id)
+    }
+
+    const resetDumpOptions = () => {
+      dumpOptions.value = [...DEFAULT_DUMP_OPTIONS]
+    }
+
     return {
       tasks,
       urgeLogs,
       checkInRecords,
+      dumpOptions,
       currentInterventionType,
       isInIntervention,
       currentInterventionStartTime,
@@ -552,13 +606,17 @@ export const useUrgeStore = defineStore(
       getTaskStreak,
       getTaskDayStatus,
       deleteUrgeLog,
-      deleteCheckInRecord
+      deleteCheckInRecord,
+      addDumpOption,
+      editDumpOption,
+      deleteDumpOption,
+      resetDumpOptions
     }
   },
   {
     persist: {
       key: 'self-discipline-app-store',
-      paths: ['tasks', 'urgeLogs', 'checkInRecords']
+      paths: ['tasks', 'urgeLogs', 'checkInRecords', 'dumpOptions']
     }
   }
 )

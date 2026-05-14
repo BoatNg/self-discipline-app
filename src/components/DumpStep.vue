@@ -1,15 +1,24 @@
 <template>
-  <div class="flex flex-col items-center  min-h-[calc(100vh-160px)] " >
+  <div class="flex flex-col items-center min-h-[calc(100vh-160px)]">
     <!-- 页面标题 -->
-    <div class="mb-4  text-center" >
-      <h2 class="text-2xl font-medium text-calm-800 mb-4">这一刻，最接近的是哪种感觉？</h2>
-      <p class="text-calm-600">选择最接近你此刻感受的选项</p>
+    <div class="mb-4 text-center w-full max-w-md flex items-center justify-between">
+      <div class="text-left">
+        <h2 class="text-2xl font-medium text-calm-800 mb-1">这一刻，最接近的是哪种感觉？</h2>
+        <p class="text-calm-600">选择最接近你此刻感受的选项</p>
+      </div>
+      <button
+        @click="showManager = true"
+        class="text-calm-400 hover:text-calm-600 p-2 transition-colors"
+        title="管理选项"
+      >
+        ⚙️
+      </button>
     </div>
 
     <!-- 选择选项 -->
-    <div class="w-full max-w-md space-y-3 mb-2" style="max-height: 50vh; overflow-y: scroll; padding: 20px 10px; border: 1px solid #e5e7eb; border-radius: 10px;">
+    <div class="w-full max-w-md space-y-2 mb-2" style="max-height: 50vh; overflow-y: scroll; padding: 20px 10px; border: 1px solid #e5e7eb; border-radius: 10px;">
       <button
-        v-for="option in options"
+        v-for="option in store.dumpOptions"
         :key="option.id"
         @click="toggleOption(option.id)"
         class="w-full p-5 rounded-xl border-2 text-left transition-all duration-200"
@@ -50,8 +59,11 @@
       完成
     </button>
 
-    <!-- 跳过按钮 -->
-    <!-- <button @click="skipSelection" class="intervention-skip-btn">跳过</button> -->
+      <!-- 跳过按钮 -->
+      <!-- <button @click="skipSelection" class="intervention-skip-btn">跳过</button> -->
+
+    <!-- 管理弹窗 -->
+    <DumpOptionsManager :is-open="showManager" @close="showManager = false" />
   </div>
 </template>
 
@@ -59,6 +71,7 @@
 import { ref, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUrgeStore } from '@/stores/useUrgeStore'
+import DumpOptionsManager from './DumpOptionsManager.vue'
 
 const router = useRouter()
 const store = useUrgeStore()
@@ -67,40 +80,7 @@ const store = useUrgeStore()
 const getRouteParams = inject<() => any>('getRouteParams')
 const selectedOptions = ref<string[]>([])
 const selectedTextsRef = ref<string[]>([])
-
-const options = [
-  // --- 特定时间与场景 ---
-  { id: 'late_night', text: '深夜' }, 
-  { id: 'morning', text: '早上起来' },
-  { id: 'toilet', text: '上厕所' },
-  { id: 'pre_subway', text: '上地铁前' },
-  { id: 'post_subway', text: '下地铁后' },
-  { id: 'gathering', text: '聚餐' },
-  { id: 'pre_meal', text: '吃饭前' },
-  { id: 'post_meal', text: '吃饱后' }, 
-
-  // --- 身体与工作状态 ---
-  { id: 'post_work', text: '高强度工作后' },
-  { id: 'fatigued', text: '身体疲劳' },
-  { id: 'post_exercise', text: '运动后' },
-  { id: 'alcohol', text: '喝酒了' },
-
-  // --- 心理与情绪触发 ---
-  { id: 'achievement', text: '获得成就/解决难题后' }, 
-  { id: 'pre_action', text: '决定或行动前' }, // <--- 新增项
-  { id: 'stressed', text: '压力大' },
-  { id: 'troubled', text: '有烦恼' },
-  { id: 'guilty', text: '愧疚' },
-  { id: 'emotional', text: '情绪上来' },
-
-  // --- 外部触发与心理暗示 ---
-  { id: 'specific_place', text: '路过特定的地点' },
-  { id: 'specific_people', text: '遇到某些人' },
-  { id: 'procrastination', text: '特许许可，“明天再说”、“下午再说”...' },
-
-  // --- 其他 ---
-  { id: 'other', text: '其他' }
-]
+const showManager = ref(false)
 
 
 const toggleOption = (optionId: string) => {
@@ -116,7 +96,7 @@ const toggleOption = (optionId: string) => {
 
   // 记录多个认知标签
   const selectedTexts = selectedOptions.value
-    .map((id) => options.find((opt) => opt.id === id)?.text || id)
+    .map((id) => store.dumpOptions.find((opt) => opt.id === id)?.text || id)
     .filter(Boolean)
 
   selectedTextsRef.value = selectedTexts

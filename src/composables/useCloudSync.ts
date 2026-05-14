@@ -1,11 +1,12 @@
 import { ref } from 'vue'
 import { supabase } from '@/utils/supabase'
-import type { Task, UrgeLog, CheckInRecord } from '@/types'
+import type { Task, UrgeLog, CheckInRecord, DumpOption } from '@/types'
 
 interface CloudBackupData {
   tasks: Task[]
   urgeLogs: UrgeLog[]
   checkInRecords: CheckInRecord[]
+  dumpOptions?: DumpOption[]
   lastSyncAt?: number
 }
 

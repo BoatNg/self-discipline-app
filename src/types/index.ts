@@ -134,3 +134,8 @@ export interface AuthErrorResult {
 }
 
 export type AuthResult = AuthSuccessResult | AuthErrorResult
+
+export interface DumpOption {
+  id: string
+  text: string
+}

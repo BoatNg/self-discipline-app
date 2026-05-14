@@ -116,62 +116,61 @@ const currentEmoji = computed(() => {
   return emojiMap[breathePhase.value as keyof typeof emojiMap] || '💖'
 })
 
-const startBreathing = () => {
-  // 8秒一个完整呼吸周期
-  const phases = [
-    { name: '吸气', duration: 4000 },
-    { name: '屏息', duration: 4000 },
-    { name: '呼气', duration: 4000 },
-    { name: '屏息', duration: 4000 },
-  ]
+  const startBreathing = () => {
+    // 4-7-8 呼吸法：吸气4秒，屏息7秒，呼气8秒（共19秒/周期）
+    const phases = [
+      { name: '吸气', duration: 4000 },
+      { name: '屏息', duration: 7000 },
+      { name: '呼气', duration: 8000 },
+    ]
 
-  let currentPhaseIndex = 0
+    let currentPhaseIndex = 0
 
-  const updatePhase = () => {
-    const phase = phases[currentPhaseIndex]
-    breathePhase.value = phase.name
-    phaseIndex.value = currentPhaseIndex
+    const updatePhase = () => {
+      const phase = phases[currentPhaseIndex]
+      breathePhase.value = phase.name
+      phaseIndex.value = currentPhaseIndex
 
-    // 更新倒计时
-    const totalSeconds = Math.ceil(phase.duration / 1000)
-    let secondsLeft = totalSeconds
+      // 更新倒计时
+      const totalSeconds = Math.ceil(phase.duration / 1000)
+      let secondsLeft = totalSeconds
 
-    // 清除之前的倒计时
-    if (phaseTimer.value) {
-      clearTimeout(phaseTimer.value)
-    }
-
-    // 更新倒计时显示
-    const updateCountdown = () => {
-      countdown.value = secondsLeft
-      secondsLeft--
-
-      if (secondsLeft >= 0) {
-        phaseTimer.value = setTimeout(updateCountdown, 1000)
+      // 清除之前的倒计时
+      if (phaseTimer.value) {
+        clearTimeout(phaseTimer.value)
       }
+
+      // 更新倒计时显示
+      const updateCountdown = () => {
+        countdown.value = secondsLeft
+        secondsLeft--
+
+        if (secondsLeft >= 0) {
+          phaseTimer.value = setTimeout(updateCountdown, 1000)
+        }
+      }
+
+      updateCountdown()
+
+      // 完整的相位定时器
+      phaseTimer.value = setTimeout(() => {
+        currentPhaseIndex = (currentPhaseIndex + 1) % phases.length
+        updatePhase()
+      }, phase.duration)
     }
 
-    updateCountdown()
+    updatePhase()
 
-    // 完整的相位定时器
-    phaseTimer.value = setTimeout(() => {
-      currentPhaseIndex = (currentPhaseIndex + 1) % phases.length
-      updatePhase()
-    }, phase.duration)
+    // 总时长57秒 = 3个完整周期（3×19秒）
+    breatheTimer.value = setTimeout(() => {
+      if (phaseTimer.value) {
+        clearTimeout(phaseTimer.value)
+      }
+      // 标记干预完成
+      store.markInterventionCompleted()
+      isCompleted.value = true
+    }, 57000)
   }
-
-  updatePhase()
-
-  // 总时长60秒
-  breatheTimer.value = setTimeout(() => {
-    if (phaseTimer.value) {
-      clearTimeout(phaseTimer.value)
-    }
-    // 标记干预完成
-    store.markInterventionCompleted()
-    isCompleted.value = true
-  }, 64000)
-}
 
 // 跳转到结果页面
 const goToResult = () => {
@@ -251,7 +250,7 @@ onUnmounted(() => {
 
 /* emoji脉搏动画 - 仅在呼吸过程中 */
 .animate-emoji-pulse {
-  animation: emoji-pulse 4s ease-in-out infinite;
+  animation: emoji-pulse 19s ease-in-out infinite;
 }
 
 @keyframes emoji-pulse {
@@ -283,7 +282,7 @@ onUnmounted(() => {
 
 /* 呼吸节奏指示器动画 */
 .breathe-indicator {
-  animation: breathe-indicator 8s ease-in-out infinite;
+  animation: breathe-indicator 19s ease-in-out infinite;
 }
 
 @keyframes breathe-indicator {

@@ -132,6 +132,19 @@
       </div>
     </div>
 
+    <!-- 倾诉选项管理 -->
+    <div class="card mb-6">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-medium text-calm-800">倾诉选项管理</h3>
+        <button @click="showDumpManager = true" class="btn-primary py-1.5 px-3 text-sm">
+          管理选项
+        </button>
+      </div>
+      <p class="text-calm-600 text-sm">
+        当前共 {{ store.dumpOptions.length }} 个选项。点击"管理选项"增删改选项。
+      </p>
+    </div>
+
     <!-- 数据管理 -->
     <div class="card mb-6">
       <h3 class="font-medium text-calm-800 mb-3">数据管理</h3>
@@ -288,7 +301,6 @@
         </div>
       </div>
     </div>
-  </div>
 
   <!-- 任务删除确认弹窗 -->
   <div
@@ -313,8 +325,12 @@
     </div>
   </div>
 
-  <!-- 通知容器 -->
-  <NotificationContainer :notifications="notifications" @remove="removeNotification" />
+    <!-- 通知容器 -->
+    <NotificationContainer :notifications="notifications" @remove="removeNotification" />
+
+    <!-- 倾诉选项管理弹窗 -->
+    <DumpOptionsManager :is-open="showDumpManager" @close="showDumpManager = false" />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -326,6 +342,7 @@ import { useCloudSync } from '@/composables/useCloudSync'
 import { useNotification } from '@/composables/useNotification'
 import LoginModal from '@/components/LoginModal.vue'
 import NotificationContainer from '@/components/NotificationContainer.vue'
+import DumpOptionsManager from '@/components/DumpOptionsManager.vue'
 import type { Task } from '@/types'
 
 const router = useRouter()
@@ -338,6 +355,7 @@ const showConfirmClear = ref(false)
 const showLoginModal = ref(false)
 const showConflictModal = ref(false)
 const showRestoreConfirmModal = ref(false)
+const showDumpManager = ref(false)
 const syncLoading = ref(false)
 const lastSyncTime = ref<number | null>(null)
 const pendingUploadData = ref<any>(null)
@@ -445,11 +463,12 @@ const handleUpload = async () => {
   syncLoading.value = true
   try {
     const backupData = {
-      tasks: store.tasks,
-      urgeLogs: store.urgeLogs,
-      checkInRecords: store.checkInRecords,
-      lastSyncAt: Date.now()
-    }
+        tasks: store.tasks,
+        urgeLogs: store.urgeLogs,
+        checkInRecords: store.checkInRecords,
+        dumpOptions: store.dumpOptions,
+        lastSyncAt: Date.now()
+      }
 
     const conflictCheck = await cloudSync.checkForConflicts(
       authStore.user.id,
@@ -532,12 +551,15 @@ const confirmRestore = async () => {
   syncLoading.value = true
 
   try {
-    const { tasks, urgeLogs, checkInRecords } = pendingUploadData.value
+    const { tasks, urgeLogs, checkInRecords, dumpOptions } = pendingUploadData.value
 
-    // 更新store数据 - Pinia的响应式系统会自动更新UI
-    store.tasks = tasks
-    store.urgeLogs = urgeLogs
-    store.checkInRecords = checkInRecords
+      // 更新store数据 - Pinia的响应式系统会自动更新UI
+      store.tasks = tasks
+      store.urgeLogs = urgeLogs
+      store.checkInRecords = checkInRecords
+      if (dumpOptions) {
+        store.dumpOptions = dumpOptions
+      }
 
     // 更新同步时间
     authStore.setLastSyncTime(Date.now())
