@@ -70,7 +70,7 @@
     </div>
 
     <!-- 创建任务按钮 -->
-    <div class="mt-8">
+    <div class="mt-8" v-if="sortedTasks.length === 0">
       <button
         @click="goToCreateTask"
         class="w-full p-4 rounded-2xl border-2 border-green-300 bg-green-50 text-green-800 text-center font-medium transition-all duration-200 hover:border-green-400 hover:bg-green-100"

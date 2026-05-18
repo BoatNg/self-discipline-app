@@ -145,27 +145,7 @@
       </p>
     </div>
 
-    <!-- 数据管理 -->
-    <div class="card mb-6">
-      <h3 class="font-medium text-calm-800 mb-3">数据管理</h3>
-      <div class="space-y-3">
-        <div class="flex justify-between items-center">
-          <span class="text-calm-600">存储的数据</span>
-          <span class="text-calm-800 font-medium">
-            {{ store.tasks.length }} 个任务, {{ store.urgeLogs.length }} 条记录
-          </span>
-        </div>
-
-        <div class="flex space-x-3">
-          <button
-            @click="clearAllData"
-            class="btn-secondary flex-1 text-red-600 border-red-200 hover:bg-red-50"
-          >
-            清除所有数据
-          </button>
-        </div>
-      </div>
-    </div>
+    
 
     <!-- 云端同步 -->
     <div class="card mb-6">
@@ -220,6 +200,28 @@
             class="btn-secondary w-full text-sm border-calm-200"
           >
             退出登录
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 数据管理 -->
+    <div class="card mb-6">
+      <h3 class="font-medium text-calm-800 mb-3">数据管理</h3>
+      <div class="space-y-3">
+        <div class="flex justify-between items-center">
+          <span class="text-calm-600">存储的数据</span>
+          <span class="text-calm-800 font-medium">
+            {{ store.tasks.length }} 个任务, {{ store.urgeLogs.length }} 条记录
+          </span>
+        </div>
+
+        <div class="flex space-x-3">
+          <button
+            @click="clearAllData"
+            class="btn-secondary flex-1 text-red-600 border-red-200 hover:bg-red-50"
+          >
+            清除所有数据
           </button>
         </div>
       </div>

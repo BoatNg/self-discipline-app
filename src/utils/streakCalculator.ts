@@ -85,7 +85,7 @@ export function calculateTaskDayStatus(
       }
     }
   } else {
-    // 【我不要】任务：检查冲动记录
+    // 【克】任务：检查冲动记录
     const dayUrgeLogs = urgeLogs.filter(
       (log) =>
         log.taskId === task.id &&
@@ -98,13 +98,19 @@ export function calculateTaskDayStatus(
       const hasRelapse = dayUrgeLogs.some((log) => log.outcome === 'relapsed')
       return hasRelapse ? 'FAILURE' : 'SUCCESS'
     }
+
+    // 无冲动记录：过去/今天 → 成功，未来 → 未进行
+    const timeState = getTimeState(date, referenceDate)
+    if (timeState === 'FUTURE') return 'PENDING'
+    return 'SUCCESS'
   }
 
-  // Step 2: 无执行记录 → 按日期态判断
+  // 走到这里仅剩 DO_WANT（修）无记录的情况
+  // 【修】任务：无打卡记录 → 按日期态判断
   const timeState = getTimeState(date, referenceDate)
 
   if (timeState === 'PAST') {
-    return 'FAILURE' // 过去无记录：系统判定失败
+    return 'FAILURE' // 过去无记录：未打卡即失败
   }
 
   return 'PENDING' // 今天或未来：未进行
