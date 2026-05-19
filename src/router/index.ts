@@ -53,6 +53,18 @@ const router = createRouter({
       meta: { title: '创建任务' }
     },
     {
+      path: '/nian',
+      name: 'nian',
+      component: () => import('@/views/NianListView.vue'),
+      meta: { title: '念' }
+    },
+    {
+      path: '/nian/:id',
+      name: 'nian-detail',
+      component: () => import('@/views/NianDetailView.vue'),
+      meta: { title: '写一念' }
+    },
+    {
       path: '/auth/callback',
       name: 'auth-callback',
       component: () => import('@/views/AuthCallbackView.vue'),

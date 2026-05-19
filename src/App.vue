@@ -72,6 +72,12 @@ const navigationItems = computed(() => {
       isActive: route.name === 'home'
     },
     {
+      to: '/nian',
+      label: '念',
+      icon: '📝',
+      isActive: route.name === 'nian'
+    },
+    {
       to: '/history',
       label: '记录',
       icon: '📊',

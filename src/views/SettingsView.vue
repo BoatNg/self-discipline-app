@@ -469,6 +469,7 @@ const handleUpload = async () => {
         urgeLogs: store.urgeLogs,
         checkInRecords: store.checkInRecords,
         dumpOptions: store.dumpOptions,
+        nians: store.nians,
         lastSyncAt: Date.now()
       }
 
@@ -553,14 +554,16 @@ const confirmRestore = async () => {
   syncLoading.value = true
 
   try {
-    const { tasks, urgeLogs, checkInRecords, dumpOptions } = pendingUploadData.value
+    const { tasks, urgeLogs, checkInRecords, dumpOptions, nians } = pendingUploadData.value
 
-      // 更新store数据 - Pinia的响应式系统会自动更新UI
       store.tasks = tasks
       store.urgeLogs = urgeLogs
       store.checkInRecords = checkInRecords
       if (dumpOptions) {
         store.dumpOptions = dumpOptions
+      }
+      if (nians) {
+        store.nians = nians
       }
 
     // 更新同步时间

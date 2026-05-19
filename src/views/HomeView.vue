@@ -79,6 +79,45 @@
       </button>
     </div>
 
+    <!-- 念 -->
+    <div class="mb-6">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-lg font-medium text-calm-800">念</h3>
+        <div class="flex items-center gap-2" v-if="store.recentNians.length > 0">
+          <button @click="goToNewNian" class="text-xs text-primary-600 hover:text-primary-700">+ 写一念</button>
+          <button @click="goToNianList" class="text-xs text-calm-500 hover:text-calm-700">&rarr;</button>
+        </div>
+      </div>
+      <div v-if="store.recentNians.length === 0" class="text-center py-8 bg-calm-50 rounded-xl">
+        <div class="text-3xl mb-2">📝</div>
+        <p class="text-calm-500 text-sm mb-3">记录经验感悟，沉淀成长</p>
+        <button @click="goToNewNian" class="btn-primary text-sm px-5 py-2">写下第一念</button>
+      </div>
+      <div v-else class="space-y-2">
+        <div
+          v-for="nian in store.recentNians"
+          :key="nian.id"
+          @click="goToNianDetail(nian.id)"
+          class="card cursor-pointer hover:shadow-md transition-shadow"
+        >
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-lg">{{ moodIcon(nian.mood) }}</span>
+            <span class="text-xs text-calm-400">{{ formatDate(nian.timestamp) }}</span>
+          </div>
+          <div class="text-sm text-calm-700 leading-relaxed line-clamp-2" v-html="nian.content"></div>
+          <div v-if="nian.tags.length > 0" class="flex flex-wrap gap-1 mt-2">
+            <span
+              v-for="tag in nian.tags"
+              :key="tag"
+              class="px-1.5 py-0.5 bg-calm-100 text-calm-600 rounded-full text-xs"
+            >
+              #{{ tag }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- 提示 -->
     <div class="mt-4 p-4 bg-calm-100 rounded-xl text-calm-600 text-sm">
       <p class="mb-2">💡 使用提示：</p>
@@ -97,10 +136,36 @@
 import { useRouter } from 'vue-router'
 import { useUrgeStore } from '@/stores/useUrgeStore'
 import type { Task, TaskStatus } from '@/types'
+import type { NianMood } from '@/types'
 import { computed } from 'vue'
 
 const router = useRouter()
 const store = useUrgeStore()
+
+const moodIcon = (mood: NianMood): string => {
+  const map: Record<NianMood, string> = {
+    calm: '😌',
+    happy: '😊',
+    neutral: '😐',
+    anxious: '😰',
+    sad: '😢',
+    angry: '😤'
+  }
+  return map[mood] || '😐'
+}
+
+const formatDate = (ts: number): string => {
+  const d = new Date(ts)
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  const hour = String(d.getHours()).padStart(2, '0')
+  const min = String(d.getMinutes()).padStart(2, '0')
+  return `${month}-${day} ${hour}:${min}`
+}
+
+const goToNianList = () => router.push('/nian')
+const goToNianDetail = (id: string) => router.push(`/nian/${id}`)
+const goToNewNian = () => router.push('/nian/new')
 
 // 计算属性：获取排序后的任务列表
 const sortedTasks = computed(() => {

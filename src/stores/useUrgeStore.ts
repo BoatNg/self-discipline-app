@@ -11,7 +11,9 @@ import type {
   TaskStatus,
   CheckInRecord,
   DumpOption,
-  EmotionIntensity
+  EmotionIntensity,
+  Nian,
+  NianMood
 } from '@/types'
 
 // 默认倾诉选项（从 DumpStep.vue 硬编码中提取）
@@ -68,6 +70,15 @@ export const useUrgeStore = defineStore(
     const urgeLogs = ref<UrgeLog[]>([])
     const checkInRecords = ref<CheckInRecord[]>([]) // 新增：打卡记录
     const dumpOptions = ref<DumpOption[]>([...DEFAULT_DUMP_OPTIONS]) // 倾诉选项
+    const nians = ref<Nian[]>([])
+
+    const sortedNians = computed(() => {
+      return [...nians.value].sort((a, b) => b.timestamp - a.timestamp)
+    })
+
+    const recentNians = computed(() => {
+      return sortedNians.value.slice(0, 3)
+    })
 
     const currentInterventionType = ref<InterventionType | null>(null)
     const isInIntervention = ref(false)
@@ -570,6 +581,34 @@ export const useUrgeStore = defineStore(
       dumpOptions.value = [...DEFAULT_DUMP_OPTIONS]
     }
 
+    const addNian = (content: string, mood: NianMood = 'neutral', tags: string[] = []) => {
+      const nian: Nian = {
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+        timestamp: Date.now(),
+        updatedAt: Date.now(),
+        content,
+        mood,
+        tags
+      }
+      nians.value.unshift(nian)
+      return nian
+    }
+
+    const updateNian = (id: string, updates: Partial<Pick<Nian, 'content' | 'mood' | 'tags'>>) => {
+      const nian = nians.value.find((n) => n.id === id)
+      if (!nian) return false
+      Object.assign(nian, updates, { updatedAt: Date.now() })
+      return true
+    }
+
+    const deleteNian = (id: string) => {
+      nians.value = nians.value.filter((n) => n.id !== id)
+    }
+
+    const getNian = (id: string): Nian | undefined => {
+      return nians.value.find((n) => n.id === id)
+    }
+
     return {
       tasks,
       urgeLogs,
@@ -627,13 +666,20 @@ export const useUrgeStore = defineStore(
       addDumpOption,
       editDumpOption,
       deleteDumpOption,
-      resetDumpOptions
+      resetDumpOptions,
+      nians,
+      sortedNians,
+      recentNians,
+      addNian,
+      updateNian,
+      deleteNian,
+      getNian
     }
   },
   {
     persist: {
       key: 'self-discipline-app-store',
-      paths: ['tasks', 'urgeLogs', 'checkInRecords', 'dumpOptions']
+      paths: ['tasks', 'urgeLogs', 'checkInRecords', 'nians']
     }
   }
 )

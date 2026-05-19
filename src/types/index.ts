@@ -101,6 +101,7 @@ export interface CloudBackupData {
   tasks: Task[]
   urgeLogs: UrgeLog[]
   checkInRecords: CheckInRecord[]
+  nians?: Nian[]
   lastSyncAt?: number
 }
 
@@ -142,4 +143,15 @@ export type AuthResult = AuthSuccessResult | AuthErrorResult
 export interface DumpOption {
   id: string
   text: string
+}
+
+export type NianMood = 'calm' | 'happy' | 'sad' | 'angry' | 'anxious' | 'neutral'
+
+export interface Nian {
+  id: string
+  timestamp: number
+  updatedAt: number
+  content: string
+  mood: NianMood
+  tags: string[]
 }
